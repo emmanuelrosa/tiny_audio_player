@@ -35,3 +35,7 @@ This app would not have been possible without the wonderful [Flutter](https://fl
 - [file_picker](https://pub.dev/packages/file_picker) - My go-to package when I want to prompt users to select a file.
 - [flutter_launcher_icons](https://pub.dev/packages/flutter_launcher_icons) - A big time saver when creating app icons.
 - [flutter_native_splash](https://pub.dev/packages/flutter_native_splash) - This package takes care of showing a splash screen. Very useful for Flutter web.
+
+## Build notes
+
+- Building as WASM breaks the PWA install button, but it doesn't seem to break actual PWA installs.

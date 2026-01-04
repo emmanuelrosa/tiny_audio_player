@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
+import 'package:pwa_install/pwa_install.dart';
 import 'package:tiny_audio_player/playcontrol/playcontrol_widget.dart';
 import 'package:tiny_audio_player/playlist/file_picker_service.dart';
 import 'package:tiny_audio_player/playlist/playlist_list_view.dart';
@@ -8,6 +9,7 @@ import 'package:tiny_audio_player/playlist/playlist_list_view.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
+  PWAInstall().setup();
   final player = Player();
   runApp(MyApp(player: player));
 }
@@ -38,6 +40,7 @@ class MyApp extends StatelessWidget {
         Provider<FilePickerService>(create: (_) => FilePickerService(player)),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Tiny Audio Player',
         theme: lightTheme,
         darkTheme: darkTheme,
@@ -61,6 +64,15 @@ class _MyHomePageState extends State<MyHomePage> {
     final filePicker = Provider.of<FilePickerService>(context);
 
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          if (PWAInstall().installPromptEnabled)
+            FilledButton(
+              onPressed: PWAInstall().promptInstall_,
+              child: const Text('Install'),
+            ),
+        ],
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: .center,

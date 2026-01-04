@@ -1,11 +1,12 @@
 {
-    "name": "tiny_audio_player",
-    "short_name": "tiny_audio_player",
-    "start_url": ".",
+    "name": "Tiny Audio Player",
+    "short_name": "Tiny Audio Player",
+    "start_url": "./",
+    "scope": ".",
     "display": "standalone",
     "background_color": "#000000",
     "theme_color": "#006D8196",
-    "description": "A new Flutter project.",
+    "description": "A minimalist audio player",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
@@ -31,5 +32,21 @@
             "type": "image/png",
             "purpose": "maskable"
         }
+    ],
+    "screenshots": [
+      {
+        "src": "screenshots/screenshot-wide.jpeg",
+        "sizes": "1440x900",
+        "type": "image/jpeg",
+        "form_factor": "wide",
+        "label": "Podcast Player on desktop"
+      },
+      {
+        "src": "screenshots/screenshot-narrow.jpeg",
+        "sizes": "390x844",
+        "type": "image/jpeg",
+        "form_factor": "narrow",
+        "label": "Podcast Player on mobile"
+      }
     ]
 }
