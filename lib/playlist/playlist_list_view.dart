@@ -77,6 +77,9 @@ class PlaylistListView extends StatelessWidget {
                 final theme = Theme.of(context);
                 final isSelected = playlist.index == index;
                 final media = medias[index];
+                final title =
+                    media.extras?['title'] ??
+                    path.basenameWithoutExtension(media.uri);
                 final key = ValueKey(media);
                 final reorderUsingDragHandle = constraints.maxWidth > 700;
                 final removeUsingSlidable = constraints.maxWidth < 1440;
@@ -112,7 +115,7 @@ class PlaylistListView extends StatelessWidget {
                 final tile = GestureDetector(
                   onTap: () => _handleTap(player, isSelected, index),
                   child: ListTile(
-                    title: Text(path.basenameWithoutExtension(media.uri)),
+                    title: Text(title),
                     leading: leadingIcon,
                     trailing: reorderUsingDragHandle
                         ? SizedBox(

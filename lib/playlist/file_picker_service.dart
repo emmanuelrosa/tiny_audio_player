@@ -58,13 +58,23 @@ class FilePickerService {
     }
 
     final medias = await Future.wait(
-      result.files
-          .map(
-            (file) => file.bytes == null
-                ? Future.value(Media(path.toUri(file.path!).toString()))
-                : Media.memory(file.bytes!),
-          )
-          .toList(),
+      List.generate(result.files.length, (index) {
+        final file = result.files[index];
+        final name = result.names[index];
+        final extras = <String, dynamic>{
+          "title": name != null
+              ? path.basenameWithoutExtension(name)
+              : path.basenameWithoutExtension(file.path!),
+        };
+
+        return file.bytes == null
+            ? Future.value(
+                Media(path.toUri(file.path!).toString(), extras: extras),
+              )
+            : Media.memory(
+                file.bytes!,
+              ).then((media) => Media(media.uri, extras: extras));
+      }),
     );
 
     for (final media in medias) {
