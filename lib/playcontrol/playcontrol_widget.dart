@@ -10,8 +10,9 @@ enum _SliderControlType { progress, volume }
 /// The container for [Widget]s used to control audio playback.
 class PlaycontrolWidget extends StatefulWidget {
   final Player player;
+  final double height;
 
-  const PlaycontrolWidget({super.key, required this.player});
+  const PlaycontrolWidget({super.key, required this.player, this.height = 125});
 
   @override
   State<PlaycontrolWidget> createState() => _PlaycontrolWidgetState();
@@ -29,7 +30,7 @@ class _PlaycontrolWidgetState extends State<PlaycontrolWidget> {
         final width = min(350.0, constraints.maxWidth);
         return Container(
           color: theme.colorScheme.surfaceContainerLow,
-          height: 125,
+          height: widget.height,
           child: Column(
             children: [
               SizedBox(height: 15.0),

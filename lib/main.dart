@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
+import 'package:tiny_audio_player/playcontrol/animated_playcontrol_widget.dart';
 import 'package:tiny_audio_player/playcontrol/playcontrol_widget.dart';
 import 'package:tiny_audio_player/playlist/file_picker_service.dart';
 import 'package:tiny_audio_player/playlist/playlist_list_view.dart';
@@ -67,17 +68,8 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [Expanded(child: PlaylistListView())],
         ),
       ),
-      bottomNavigationBar: Consumer<Player>(
-        builder: (context, player, _) => StreamProvider<Playlist>.value(
-          initialData: player.state.playlist,
-          value: player.stream.playlist,
-          updateShouldNotify: (a, b) => a.medias.length != b.medias.length,
-          builder: (context, _) => Consumer<Playlist>(
-            builder: (context, playlist, _) => playlist.medias.isNotEmpty
-                ? PlaycontrolWidget(player: player)
-                : SizedBox(),
-          ),
-        ),
+      bottomNavigationBar: AnimatedPlaycontrolWidget(
+        duration: Duration(seconds: 1),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => filePicker.pickFiles(),
