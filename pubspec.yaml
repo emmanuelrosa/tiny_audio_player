@@ -41,7 +41,6 @@ dependencies:
   path: ^1.9.1
   file_picker: ^10.3.8
   pwa_install: ^0.0.6
-  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:

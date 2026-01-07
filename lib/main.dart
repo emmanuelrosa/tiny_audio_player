@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:heroicons/heroicons.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
 import 'package:pwa_install/pwa_install.dart';
 import 'package:tiny_audio_player/playcontrol/playcontrol_widget.dart';
 import 'package:tiny_audio_player/playlist/file_picker_service.dart';
 import 'package:tiny_audio_player/playlist/playlist_list_view.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-final Uri homePageUrl = Uri.parse(
-  'https://github.com/emmanuelrosa/tiny_audio_player',
-);
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -77,13 +71,6 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: PWAInstall().promptInstall_,
               child: const Text('Install'),
             ),
-          SizedBox(width: 10),
-          IconButton(
-            onPressed: () => launchUrl(homePageUrl),
-            icon: HeroIcon(HeroIcons.questionMarkCircle),
-            tooltip: 'Learn more',
-          ),
-          SizedBox(width: 10),
         ],
       ),
       body: Center(
