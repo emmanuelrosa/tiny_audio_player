@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
 import 'package:tiny_audio_player/playcontrol/animated_playcontrol_widget.dart';
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
         theme: lightTheme,
         darkTheme: darkTheme,
         themeMode: .dark,
-        home: const MyHomePage(),
+        home: LoaderOverlay(child: const MyHomePage()),
       ),
     );
   }
@@ -72,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage> {
         duration: Duration(seconds: 1),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => filePicker.pickFiles(),
+        onPressed: () => filePicker.pickFiles(context),
         tooltip: 'Add audio files',
         child: const Icon(Icons.add),
       ),

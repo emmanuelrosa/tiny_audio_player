@@ -1,4 +1,7 @@
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:path/path.dart' as path;
 
@@ -45,7 +48,7 @@ class FilePickerService {
     "mov",
   ];
 
-  Future<void> pickFiles() async {
+  Future<void> pickFiles(BuildContext context) async {
     final result = await FilePicker.platform.pickFiles(
       dialogTitle: 'Add audio files',
       allowMultiple: true,
@@ -55,6 +58,10 @@ class FilePickerService {
 
     if (result == null || result.files.isEmpty) {
       return;
+    }
+
+    if (context.mounted) {
+      _showLoaderOverlay(context);
     }
 
     final medias = await Future.wait(
@@ -77,6 +84,10 @@ class FilePickerService {
       }),
     );
 
+    if (context.mounted) {
+      await _hideLoaderOverlay(context);
+    }
+
     for (final media in medias) {
       if (player.state.playlist.medias.contains(media)) {
         /* Currently, I'm unable to add the same media more than once to the playlist.
@@ -86,6 +97,22 @@ class FilePickerService {
         continue;
       } else {
         await player.add(media);
+      }
+    }
+  }
+
+  void _showLoaderOverlay(BuildContext context) {
+    if (kIsWeb) {
+      context.loaderOverlay.show();
+    }
+  }
+
+  Future<void> _hideLoaderOverlay(BuildContext context) async {
+    if (kIsWeb) {
+      await Future.delayed(Duration(milliseconds: 500));
+
+      if (context.mounted) {
+        context.loaderOverlay.hide();
       }
     }
   }

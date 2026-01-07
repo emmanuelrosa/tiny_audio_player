@@ -40,6 +40,7 @@ dependencies:
   heroicons: ^0.11.0
   path: ^1.9.1
   file_picker: ^10.3.8
+  loader_overlay: ^5.0.0
 
 dev_dependencies:
   flutter_test:
