@@ -75,9 +75,11 @@ class _PlaycontrolWidgetState extends State<PlaycontrolWidget> {
                           onPressed: playing ? _handlePrevious : null,
                           icon: HeroIcons.backward,
                         ),
-                        _ControlButton(
+                        _AnimatedControlButton(
+                          firstIcon: HeroIcons.play,
+                          secondIcon: HeroIcons.pause,
+                          crossFadeState: playing ? .showSecond : .showFirst,
                           onPressed: _handlePlayOrPause,
-                          icon: playing ? HeroIcons.pause : HeroIcons.play,
                         ),
                         _ControlButton(
                           onPressed: playing ? _handleNext : null,
@@ -126,6 +128,31 @@ class _ControlButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       IconButton(onPressed: onPressed, icon: HeroIcon(icon), iconSize: 32);
+}
+
+/// A animated playback control button.
+class _AnimatedControlButton extends StatelessWidget {
+  final HeroIcons firstIcon;
+  final HeroIcons secondIcon;
+  final CrossFadeState crossFadeState;
+  final Duration duration;
+  final Function()? onPressed;
+
+  const _AnimatedControlButton({
+    required this.firstIcon,
+    required this.secondIcon,
+    required this.crossFadeState,
+    this.duration = const Duration(milliseconds: 250),
+    this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) => AnimatedCrossFade(
+    duration: duration,
+    firstChild: _ControlButton(onPressed: onPressed, icon: firstIcon),
+    secondChild: _ControlButton(onPressed: onPressed, icon: secondIcon),
+    crossFadeState: crossFadeState,
+  );
 }
 
 /// Functions as a progress bar for the playback position, and as a slider to seek.
