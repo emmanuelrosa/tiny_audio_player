@@ -99,9 +99,11 @@ class _PlaycontrolWidgetState extends State<PlaycontrolWidget> {
 
   Future<void> _handlePlayOrPause() {
     final index = widget.player.state.playlist.index;
+    final position = widget.player.state.position;
+
     return widget.player.state.playing
         ? widget.player.pause()
-        : widget.player.jump(index);
+        : widget.player.jump(index).then((_) => widget.player.seek(position));
   }
 
   Future<void> _handlePrevious() => widget.player.previous();
