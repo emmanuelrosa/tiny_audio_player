@@ -25,7 +25,9 @@
         dart = self.packages."${system}".dart-flutter;
       };
 
-      default = self.packages."${system}".vim;
+      tiny_audio_player = pkgs.callPackage ./pkgs/tiny_audio_player {};
+
+      default = self.packages."${system}".tiny_audio_player;
     });
   };
 }
