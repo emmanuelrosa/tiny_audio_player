@@ -14,8 +14,6 @@
   extraWrapProgramArgs = "--set LD_LIBRARY_PATH ${mpv-unwrapped}/lib --set PATH ${lib.makeBinPath [ xdg-user-dirs ]}";
 
   postInstall = ''
-    mkdir -p $out/share/application
-
     for n in 16 24 32 48 64 96 128 256; do
       size=$n"x"$n
       mkdir -p $out/share/icons/hicolor/$size/apps
