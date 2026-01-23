@@ -18,11 +18,16 @@ class AnimatedPlaycontrolWidget extends StatelessWidget {
       updateShouldNotify: (a, b) => a.medias.length != b.medias.length,
       child: Consumer2<Player, Playlist>(
         builder: (context, player, playlist, _) {
-          final height = playlist.medias.isEmpty ? 0.0 : 125.0;
-          return AnimatedSize(
-            curve: Curves.ease,
+          return AnimatedSwitcher(
+            switchInCurve: Curves.ease,
+            switchOutCurve: Curves.ease,
             duration: duration,
-            child: PlaycontrolWidget(player: player, height: height),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return SizeTransition(sizeFactor: animation, child: child);
+            },
+            child: playlist.medias.isEmpty
+                ? SizedBox(key: UniqueKey())
+                : PlaycontrolWidget(player: player),
           );
         },
       ),

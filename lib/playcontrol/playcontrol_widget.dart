@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
@@ -27,70 +28,71 @@ class _PlaycontrolWidgetState extends State<PlaycontrolWidget> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final width = min(350.0, constraints.maxWidth);
         return Container(
           color: theme.colorScheme.surfaceContainerLow,
           height: widget.height,
-          child: Column(
-            children: [
-              SizedBox(height: 15.0),
-              SizedBox(
-                width: width,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: switch (_sliderControlType) {
-                        .progress => _PlaybackProgress(
-                          player: widget.player,
-                          minHeight: 10.0,
-                        ),
-                        .volume => _VolumeControl(
-                          player: widget.player,
-                          minHeight: 10.0,
-                        ),
-                      },
-                    ),
-                    SizedBox(width: 5.0),
-                    IconButton(
-                      onPressed: _handleSliderControlToggle,
-                      icon: HeroIcon(switch (_sliderControlType) {
-                        .progress => HeroIcons.speakerWave,
-                        .volume => HeroIcons.arrowsRightLeft,
-                      }),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 10.0),
-              SizedBox(
-                width: width,
-                child: StreamProvider<bool>.value(
-                  initialData: widget.player.state.playing,
-                  value: widget.player.stream.playing,
-                  child: Consumer<bool>(
-                    builder: (context, playing, _) => Row(
-                      mainAxisAlignment: .spaceEvenly,
+          width: constraints.maxWidth,
+          child: Center(
+            child: SizedBox(
+              width: math.min(350.0, constraints.maxWidth),
+              child: Column(
+                children: [
+                  SizedBox(height: 15.0),
+                  SizedBox(
+                    child: Row(
                       children: [
-                        _ControlButton(
-                          onPressed: playing ? _handlePrevious : null,
-                          icon: HeroIcons.backward,
+                        Expanded(
+                          child: switch (_sliderControlType) {
+                            .progress => _PlaybackProgress(
+                              player: widget.player,
+                              minHeight: 10.0,
+                            ),
+                            .volume => _VolumeControl(
+                              player: widget.player,
+                              minHeight: 10.0,
+                            ),
+                          },
                         ),
-                        _AnimatedControlButton(
-                          firstIcon: HeroIcons.play,
-                          secondIcon: HeroIcons.pause,
-                          crossFadeState: playing ? .showSecond : .showFirst,
-                          onPressed: _handlePlayOrPause,
-                        ),
-                        _ControlButton(
-                          onPressed: playing ? _handleNext : null,
-                          icon: HeroIcons.forward,
+                        SizedBox(width: 5.0),
+                        IconButton(
+                          onPressed: _handleSliderControlToggle,
+                          icon: HeroIcon(switch (_sliderControlType) {
+                            .progress => HeroIcons.speakerWave,
+                            .volume => HeroIcons.arrowsRightLeft,
+                          }),
                         ),
                       ],
                     ),
                   ),
-                ),
+                  SizedBox(height: 10.0),
+                  StreamProvider<bool>.value(
+                    initialData: widget.player.state.playing,
+                    value: widget.player.stream.playing,
+                    child: Consumer<bool>(
+                      builder: (context, playing, _) => Row(
+                        mainAxisAlignment: .spaceEvenly,
+                        children: [
+                          _ControlButton(
+                            onPressed: playing ? _handlePrevious : null,
+                            icon: HeroIcons.backward,
+                          ),
+                          _AnimatedControlButton(
+                            firstIcon: HeroIcons.play,
+                            secondIcon: HeroIcons.pause,
+                            crossFadeState: playing ? .showSecond : .showFirst,
+                            onPressed: _handlePlayOrPause,
+                          ),
+                          _ControlButton(
+                            onPressed: playing ? _handleNext : null,
+                            icon: HeroIcons.forward,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         );
       },
