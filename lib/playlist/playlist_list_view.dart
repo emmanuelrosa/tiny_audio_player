@@ -26,34 +26,6 @@ class PlaylistListView extends StatelessWidget {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                if (kIsWeb)
-                  Card.filled(
-                    color: theme.colorScheme.tertiaryContainer,
-                    margin: EdgeInsetsGeometry.only(bottom: 10),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: LayoutBuilder(
-                        builder: (context, constraints) => SizedBox(
-                          width: min(350, constraints.maxWidth),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.info,
-                                color: theme.colorScheme.onTertiaryContainer,
-                              ),
-                              SizedBox(width: 10),
-                              Text(
-                                'Audio files need to be loaded into memory.\nAvoid adding large audio files.',
-                                style: theme.textTheme.titleSmall?.copyWith(
-                                  color: theme.colorScheme.onTertiaryContainer,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
                 Text(
                   'Your playlist is empty.',
                   style: theme.textTheme.bodyLarge,
