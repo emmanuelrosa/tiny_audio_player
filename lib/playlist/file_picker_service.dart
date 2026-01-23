@@ -49,6 +49,10 @@ class FilePickerService {
   ];
 
   Future<void> pickFiles(BuildContext context) async {
+    if (context.mounted) {
+      _showLoaderOverlay(context);
+    }
+
     final result = await FilePicker.platform.pickFiles(
       dialogTitle: 'Add audio files',
       allowMultiple: true,
@@ -58,10 +62,6 @@ class FilePickerService {
 
     if (result == null || result.files.isEmpty) {
       return;
-    }
-
-    if (context.mounted) {
-      _showLoaderOverlay(context);
     }
 
     final medias = await Future.wait(
