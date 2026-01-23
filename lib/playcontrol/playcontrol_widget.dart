@@ -160,43 +160,56 @@ class _AnimatedControlButton extends StatelessWidget {
 }
 
 /// Functions as a progress bar for the playback position, and as a slider to seek.
-class _PlaybackProgress extends StatelessWidget {
+class _PlaybackProgress extends StatefulWidget {
   final Player player;
   final double? minHeight;
 
   const _PlaybackProgress({super.key, required this.player, this.minHeight});
 
   @override
+  State<_PlaybackProgress> createState() => _PlaybackProgressState();
+}
+
+class _PlaybackProgressState extends State<_PlaybackProgress> {
+  double? _adjustmentValue;
+
+  @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) => StreamProvider<Duration>.value(
-      initialData: player.state.position,
-      value: player.stream.position,
+      initialData: widget.player.state.position,
+      value: widget.player.stream.position,
       child: Consumer<Duration>(
         builder: (context, position, _) {
-          final duration = player.state.duration;
-          final percent = duration != Duration.zero && !player.state.completed
-              ? position.inSeconds / duration.inSeconds
-              : 0.0;
-          return GestureDetector(
-            onTapUp: (details) => player.state.playing
-                ? _seek(details.localPosition.dx / constraints.maxWidth)
-                : null,
-            child: LinearProgressIndicator(
-              value: percent,
-              minHeight: minHeight,
-            ),
+          final duration = widget.player.state.duration;
+          final percent =
+              _adjustmentValue ??
+              (duration != Duration.zero && !widget.player.state.completed
+                  ? position.inSeconds / duration.inSeconds
+                  : 0.0);
+          return Slider(
+            value: percent,
+            min: 0.0,
+            max: 1.0,
+            onChanged: _adjust,
+            onChangeEnd: _seek,
           );
         },
       ),
     ),
   );
 
+  void _adjust(double percent) {
+    setState(() => _adjustmentValue = percent);
+  }
+
   Future<void> _seek(double percent) {
-    final duration = player.state.duration.inSeconds;
+    setState(() => _adjustmentValue = null);
+
+    final duration = widget.player.state.duration.inSeconds;
     final boundedPercent = max(0.0, min(1.0, percent));
     final position = Duration(seconds: (boundedPercent * duration).toInt());
 
-    return player.seek(position);
+    return widget.player.seek(position);
   }
 }
 
@@ -215,22 +228,19 @@ class _VolumeControl extends StatelessWidget {
       child: Consumer<double>(
         builder: (context, volume, _) {
           final theme = Theme.of(context);
-          return GestureDetector(
-            onTapUp: (details) =>
-                _adjust(details.localPosition.dx / constraints.maxWidth),
-            child: LinearProgressIndicator(
-              value: volume / 100.0,
-              minHeight: minHeight,
-              color: theme.colorScheme.tertiary,
-            ),
+          return Slider(
+            value: volume,
+            min: 0.0,
+            max: 100,
+            activeColor: theme.colorScheme.tertiary,
+            onChanged: _adjust,
           );
         },
       ),
     ),
   );
 
-  Future<void> _adjust(double percent) {
-    final volume = max(0.0, min(1.0, percent)) * 100;
+  Future<void> _adjust(double volume) {
     return player.setVolume(volume);
   }
 }
