@@ -27,6 +27,8 @@
 
       tiny_audio_player = pkgs.callPackage ./pkgs/tiny_audio_player {};
 
+      tiny_audio_player_web = pkgs.callPackage ./pkgs/tiny_audio_player_web {};
+
       default = self.packages."${system}".tiny_audio_player;
     });
   };
