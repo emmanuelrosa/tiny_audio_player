@@ -87,7 +87,7 @@ class PlaylistListView extends StatelessWidget {
                 final tile = GestureDetector(
                   onTap: () => _handleTap(player, isSelected, index),
                   child: ListTile(
-                    title: Text(title),
+                    title: Text(title, maxLines: 1, overflow: .ellipsis),
                     leading: leadingIcon,
                     trailing: reorderUsingDragHandle
                         ? SizedBox(

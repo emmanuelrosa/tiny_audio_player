@@ -60,9 +60,14 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final filePicker = Provider.of<FilePickerService>(context);
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Tiny Audio Player'),
+        backgroundColor: theme.colorScheme.inversePrimary,
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: .center,
@@ -75,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => filePicker.pickFiles(context),
         tooltip: 'Add audio files',
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.playlist_add_rounded),
       ),
     );
   }
