@@ -5,8 +5,10 @@ import 'package:provider/provider.dart';
 import 'package:tiny_audio_player/home/home_view.dart';
 import 'package:tiny_audio_player/menu/app_routes.dart';
 import 'package:tiny_audio_player/playcontrol/animated_playcontrol_widget.dart';
+import 'package:tiny_audio_player/playcontrol/playcontrol_settings_adapter.dart';
 import 'package:tiny_audio_player/playlist/file_picker_service.dart';
 import 'package:tiny_audio_player/playlist/playlist_list_view.dart';
+import 'package:tiny_audio_player/settings/settings_service.dart';
 import 'package:tiny_audio_player/share/share_view.dart';
 
 void main() {
@@ -40,14 +42,23 @@ class MyApp extends StatelessWidget {
       providers: [
         Provider<Player>.value(value: player),
         Provider<FilePickerService>(create: (_) => FilePickerService(player)),
+        Provider<SettingsService>(create: (_) => SettingsService()),
       ],
-      child: MaterialApp(
-        title: 'Tiny Audio Player',
-        theme: lightTheme,
-        darkTheme: darkTheme,
-        themeMode: .dark,
-        routes: AppRoutes.routes,
-      ),
+      builder: (context, _) {
+        final player = context.read<Player>();
+        final settings = context.read<SettingsService>();
+
+        return Provider.value(
+          value: PlaycontrolSettingsAdapter(player: player, settings: settings),
+          builder: (context, _) => MaterialApp(
+            title: 'Tiny Audio Player',
+            theme: lightTheme,
+            darkTheme: darkTheme,
+            themeMode: .dark,
+            routes: AppRoutes.routes,
+          ),
+        );
+      },
     );
   }
 }
