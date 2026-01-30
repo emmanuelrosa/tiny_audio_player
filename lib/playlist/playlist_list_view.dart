@@ -1,6 +1,3 @@
-import 'dart:math';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:heroicons/heroicons.dart';
@@ -10,6 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:tiny_audio_player/playlist/waveform_icon.dart';
 
 class PlaylistListView extends StatelessWidget {
+  const PlaylistListView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Consumer<Player>(
