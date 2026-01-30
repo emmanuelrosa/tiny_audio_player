@@ -14,7 +14,7 @@ class HomeView extends StatelessWidget {
     final filePicker = Provider.of<FilePickerService>(context);
 
     return Scaffold(
-      appBar: AppBarBuilder.build(context),
+      appBar: AppBarBuilder.build(context, title: 'Playlist'),
       body: Center(
         child: Column(
           mainAxisAlignment: .center,

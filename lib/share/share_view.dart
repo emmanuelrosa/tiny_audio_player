@@ -15,7 +15,7 @@ class ShareView extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBarBuilder.build(context, type: .minimal),
+      appBar: AppBarBuilder.build(context, title: 'Share', type: .minimal),
       body: Center(
         child: Column(
           mainAxisAlignment: .center,

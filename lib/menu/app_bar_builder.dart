@@ -7,13 +7,14 @@ enum AppBarType { normal, minimal }
 class AppBarBuilder {
   static PreferredSizeWidget build(
     BuildContext context, {
+    required String title,
     AppBarType type = AppBarType.normal,
   }) {
     final theme = Theme.of(context);
     final navigator = Navigator.of(context);
 
     return AppBar(
-      title: const Text('Tiny Audio Player'),
+      title: Text(title),
       backgroundColor: theme.colorScheme.inversePrimary,
       actions: [
         if (type == .normal)
