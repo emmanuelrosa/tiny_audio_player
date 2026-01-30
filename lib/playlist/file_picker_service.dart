@@ -60,29 +60,27 @@ class FilePickerService {
       allowedExtensions: FilePickerService.allowedExtensions,
     );
 
-    if (result == null || result.files.isEmpty) {
-      return;
-    }
+    final medias = result == null
+        ? <Media>[]
+        : await Future.wait(
+            List.generate(result.files.length, (index) {
+              final file = result.files[index];
+              final name = result.names[index];
+              final extras = <String, dynamic>{
+                "title": name != null
+                    ? path.basenameWithoutExtension(name)
+                    : path.basenameWithoutExtension(file.path!),
+              };
 
-    final medias = await Future.wait(
-      List.generate(result.files.length, (index) {
-        final file = result.files[index];
-        final name = result.names[index];
-        final extras = <String, dynamic>{
-          "title": name != null
-              ? path.basenameWithoutExtension(name)
-              : path.basenameWithoutExtension(file.path!),
-        };
-
-        return file.bytes == null
-            ? Future.value(
-                Media(path.toUri(file.path!).toString(), extras: extras),
-              )
-            : Media.memory(
-                file.bytes!,
-              ).then((media) => Media(media.uri, extras: extras));
-      }),
-    );
+              return file.bytes == null
+                  ? Future.value(
+                      Media(path.toUri(file.path!).toString(), extras: extras),
+                    )
+                  : Media.memory(
+                      file.bytes!,
+                    ).then((media) => Media(media.uri, extras: extras));
+            }),
+          );
 
     if (context.mounted) {
       await _hideLoaderOverlay(context);
