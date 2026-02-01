@@ -21,7 +21,7 @@ flutter_launcher_icons:
   web:
     generate: true
     background_color: "#000000"
-    theme_color: "#006D8196"
+    theme_color: "#0c4a73"
 
   windows:
     generate: true

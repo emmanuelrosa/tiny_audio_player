@@ -5,7 +5,7 @@
     "scope": ".",
     "display": "standalone",
     "background_color": "#000000",
-    "theme_color": "#006D8196",
+    "theme_color": "#0c4a73",
     "description": "A minimalist audio player",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
