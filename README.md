@@ -6,12 +6,12 @@ A minimalist audio player, written in Dart/Flutter.
 
 ## Features
 
-- A single (ephemeral) playlist to queue your audio files.
+- A single playlist to queue your audio files.
 - Play/pause, prior/next track, and volume controls.
 - No user data collection.
 - Can be installed as a PWA (progressive web application).
 
-That's it! I did say this is a *minimalist* audio player.
+The main concept within *Tiny Audio Player* is the playlist. You simply add the audio tracks you want to listen to, sort them as you wish, and press _PLAY_.
 
 ## Getting Started
 
@@ -36,3 +36,4 @@ This app would not have been possible without the wonderful [Flutter](https://fl
 - [flutter_launcher_icons](https://pub.dev/packages/flutter_launcher_icons) - A big time saver when creating app icons.
 - [flutter_native_splash](https://pub.dev/packages/flutter_native_splash) - This package takes care of showing a splash screen. Very useful for Flutter web.
 - [loader_overlay](https://pub.dev/packages/loader_overlay) - An easy way to show a loading indicator overlay during a long-running task.
+- [hive_ce](https://pub.dev/packages/hive_ce) - A very nice key/value store, used to persist the player state (mostly on Desktop, not Web).
