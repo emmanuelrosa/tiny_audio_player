@@ -4,66 +4,58 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
+import 'package:tiny_audio_player/extension/duration_extension.dart';
 
-enum _SliderControlType { progress, volume }
+enum _PlaycontrolWidgetSize { minimal, expanded }
 
 /// The container for [Widget]s used to control audio playback.
 class PlaycontrolWidget extends StatefulWidget {
   final Player player;
-  final double height;
+  final double minimalHeight;
+  final double expandedHeight;
 
-  const PlaycontrolWidget({super.key, required this.player, this.height = 125});
+  const PlaycontrolWidget({
+    super.key,
+    required this.player,
+    this.minimalHeight = 155,
+    this.expandedHeight = 250,
+  });
 
   @override
   State<PlaycontrolWidget> createState() => _PlaycontrolWidgetState();
 }
 
 class _PlaycontrolWidgetState extends State<PlaycontrolWidget> {
-  _SliderControlType _sliderControlType = .progress;
+  _PlaycontrolWidgetSize _size = .minimal;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final height = switch (_size) {
+      .minimal => widget.minimalHeight,
+      .expanded => widget.expandedHeight,
+    };
 
     return LayoutBuilder(
       builder: (context, constraints) {
         return Container(
           color: theme.colorScheme.surfaceContainerLow,
-          height: widget.height,
+          height: height,
           width: constraints.maxWidth,
           child: Center(
             child: SizedBox(
               width: math.min(350.0, constraints.maxWidth),
               child: Column(
                 children: [
-                  SizedBox(height: 15.0),
-                  SizedBox(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: switch (_sliderControlType) {
-                            .progress => _PlaybackProgress(
-                              player: widget.player,
-                              minHeight: 10.0,
-                            ),
-                            .volume => _VolumeControl(
-                              player: widget.player,
-                              minHeight: 10.0,
-                            ),
-                          },
-                        ),
-                        SizedBox(width: 5.0),
-                        IconButton(
-                          onPressed: _handleSliderControlToggle,
-                          icon: Icon(switch (_sliderControlType) {
-                            .progress => Icons.volume_up_rounded,
-                            .volume => Icons.compare_arrows_rounded,
-                          }),
-                        ),
-                      ],
+                  IconButton(
+                    onPressed: _handleSizeToggle,
+                    icon: Icon(
+                      _size == .minimal
+                          ? Icons.keyboard_arrow_up_rounded
+                          : Icons.keyboard_arrow_down_rounded,
+                      size: 30,
                     ),
                   ),
-                  SizedBox(height: 10.0),
                   StreamProvider<bool>.value(
                     initialData: widget.player.state.playing,
                     value: widget.player.stream.playing,
@@ -89,6 +81,51 @@ class _PlaycontrolWidgetState extends State<PlaycontrolWidget> {
                       ),
                     ),
                   ),
+                  _PlaybackProgress(player: widget.player, minHeight: 10.0),
+                  if (_size == .expanded)
+                    _VolumeControl(player: widget.player, minHeight: 10.0),
+                  if (_size == .expanded)
+                    SizedBox(
+                      child: Row(
+                        mainAxisAlignment: .spaceEvenly,
+                        children: [
+                          IconButton(
+                            onPressed: _handleClearPlaylist,
+                            icon: Icon(Icons.clear_all_rounded),
+                            tooltip: 'Clear playlist',
+                          ),
+                          IconButton(
+                            onPressed: _handleShuffle,
+                            icon: Icon(Icons.shuffle_rounded),
+                            tooltip: 'Shuffle playlist',
+                          ),
+                          SegmentedButton<PlaylistMode>(
+                            segments: [
+                              ButtonSegment(
+                                value: .none,
+                                icon: Icon(Icons.one_x_mobiledata_rounded),
+                                tooltip: 'Do not repeat',
+                              ),
+                              ButtonSegment(
+                                value: .single,
+                                icon: Icon(Icons.repeat_one_rounded),
+                                tooltip: 'Repeat current track',
+                              ),
+                              ButtonSegment(
+                                value: .loop,
+                                icon: Icon(Icons.repeat_rounded),
+                                tooltip: 'Repeat all tracks',
+                              ),
+                            ],
+                            selected: <PlaylistMode>{
+                              widget.player.state.playlistMode,
+                            },
+                            onSelectionChanged: _handlePlaylistMode,
+                            showSelectedIcon: false,
+                          ),
+                        ],
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -111,13 +148,28 @@ class _PlaycontrolWidgetState extends State<PlaycontrolWidget> {
 
   Future<void> _handleNext() => widget.player.next();
 
-  void _handleSliderControlToggle() {
-    final _SliderControlType nextState = switch (_sliderControlType) {
-      .progress => .volume,
-      .volume => .progress,
+  void _handleSizeToggle() {
+    final _PlaycontrolWidgetSize nextSize = switch (_size) {
+      .minimal => .expanded,
+      .expanded => .minimal,
     };
 
-    setState(() => _sliderControlType = nextState);
+    setState(() => _size = nextSize);
+  }
+
+  void _handleClearPlaylist() async {
+    await widget.player.stop();
+    await widget.player.open(Playlist([]), play: false);
+  }
+
+  void _handleShuffle() async {
+    await widget.player.setShuffle(!widget.player.state.shuffle);
+    setState(() {});
+  }
+
+  void _handlePlaylistMode(Set<PlaylistMode> selection) async {
+    await widget.player.setPlaylistMode(selection.first);
+    setState(() {});
   }
 }
 
@@ -179,18 +231,42 @@ class _PlaybackProgressState extends State<_PlaybackProgress> {
       value: widget.player.stream.position,
       child: Consumer<Duration>(
         builder: (context, position, _) {
+          final theme = Theme.of(context);
           final duration = widget.player.state.duration;
           final percent =
               _adjustmentValue ??
               (duration != Duration.zero && !widget.player.state.completed
                   ? position.inSeconds / duration.inSeconds
                   : 0.0);
-          return Slider(
-            value: percent,
-            min: 0.0,
-            max: 1.0,
-            onChanged: _adjust,
-            onChangeEnd: _seek,
+          final durationElapsed = _adjustmentValue == null
+              ? position
+              : duration * percent;
+          final durationRemaining = _adjustmentValue == null
+              ? (duration - position)
+              : (duration - durationElapsed);
+          return SizedBox(
+            child: Row(
+              mainAxisAlignment: .center,
+              children: [
+                Text(
+                  durationElapsed.toHHMMSS(),
+                  style: theme.textTheme.labelSmall,
+                ),
+                Expanded(
+                  child: Slider(
+                    value: percent,
+                    min: 0.0,
+                    max: 1.0,
+                    onChanged: _adjust,
+                    onChangeEnd: _seek,
+                  ),
+                ),
+                Text(
+                  durationRemaining.toHHMMSS(),
+                  style: theme.textTheme.labelSmall,
+                ),
+              ],
+            ),
           );
         },
       ),
@@ -227,12 +303,21 @@ class _VolumeControl extends StatelessWidget {
       child: Consumer<double>(
         builder: (context, volume, _) {
           final theme = Theme.of(context);
-          return Slider(
-            value: volume,
-            min: 0.0,
-            max: 100,
-            activeColor: theme.colorScheme.tertiary,
-            onChanged: _adjust,
+          return SizedBox(
+            child: Row(
+              children: [
+                Icon(Icons.headphones_rounded),
+                Expanded(
+                  child: Slider(
+                    value: volume,
+                    min: 0.0,
+                    max: 100,
+                    activeColor: theme.colorScheme.tertiary,
+                    onChanged: _adjust,
+                  ),
+                ),
+              ],
+            ),
           );
         },
       ),

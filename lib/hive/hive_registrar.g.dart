@@ -7,12 +7,14 @@ import 'package:tiny_audio_player/hive/hive_adapters.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
+    registerAdapter(PlaylistModeAdapter());
     registerAdapter(SerializedMediaAdapter());
   }
 }
 
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
+    registerAdapter(PlaylistModeAdapter());
     registerAdapter(SerializedMediaAdapter());
   }
 }

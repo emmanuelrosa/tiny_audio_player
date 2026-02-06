@@ -42,3 +42,44 @@ class SerializedMediaAdapter extends TypeAdapter<SerializedMedia> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+class PlaylistModeAdapter extends TypeAdapter<PlaylistMode> {
+  @override
+  final typeId = 1;
+
+  @override
+  PlaylistMode read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return PlaylistMode.none;
+      case 1:
+        return PlaylistMode.single;
+      case 2:
+        return PlaylistMode.loop;
+      default:
+        return PlaylistMode.none;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, PlaylistMode obj) {
+    switch (obj) {
+      case PlaylistMode.none:
+        writer.writeByte(0);
+      case PlaylistMode.single:
+        writer.writeByte(1);
+      case PlaylistMode.loop:
+        writer.writeByte(2);
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PlaylistModeAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}

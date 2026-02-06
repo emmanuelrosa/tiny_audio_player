@@ -47,7 +47,7 @@ class PlaylistStorageServiceHive implements PlaylistStorageService {
         : await Hive.openBox<SerializedMedia>(boxName, path: directory.path);
     final playlistStorage = PlaylistStorageServiceHive._(box);
     player.stream.playlist.listen(
-      (playlist) => playlistStorage.putAll(playlist.medias),
+      (playlist) async => await playlistStorage.putAll(playlist.medias),
     );
     final medias = await playlistStorage.getAll();
     await player.open(Playlist(medias), play: false);
