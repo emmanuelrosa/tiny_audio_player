@@ -4,17 +4,17 @@ import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
 import 'package:tiny_audio_player/hive/hive_registrar.g.dart';
 import 'package:tiny_audio_player/menu/app_routes.dart';
-import 'package:tiny_audio_player/playcontrol/playcontrol_settings_adapter.dart';
 import 'package:tiny_audio_player/playlist/file_picker_service.dart';
 import 'package:tiny_audio_player/playlist/playlist_storage_adapter.dart';
 import 'package:tiny_audio_player/playlist/playlist_storage_service.dart';
 import 'package:tiny_audio_player/settings/settings_service.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
   Hive.registerAdapters();
   final player = Player();
+  await SettingsService.init(player);
   runApp(MyApp(player: player));
 }
 
@@ -42,24 +42,16 @@ class MyApp extends StatelessWidget {
       providers: [
         Provider<Player>.value(value: player),
         Provider<FilePickerService>(create: (_) => FilePickerService(player)),
-        Provider<SettingsService>(create: (_) => SettingsService()),
         Provider<PlaylistStorageService>(
           create: (_) => PlaylistStorageService.init(),
         ),
       ],
       builder: (context, _) {
         final player = context.read<Player>();
-        final settings = context.read<SettingsService>();
         final playlistStorageService = context.read<PlaylistStorageService>();
 
         return MultiProvider(
           providers: [
-            Provider.value(
-              value: PlaycontrolSettingsAdapter(
-                player: player,
-                settings: settings,
-              ),
-            ),
             Provider.value(
               value: PlaylistStorageAdapter(
                 player: player,
