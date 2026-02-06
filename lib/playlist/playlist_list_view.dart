@@ -5,7 +5,6 @@ import 'package:media_kit/media_kit.dart';
 import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
 import 'package:tiny_audio_player/playlist/playlist_storage_service.dart';
-import 'package:tiny_audio_player/playlist/waveform_icon.dart';
 
 class PlaylistListView extends StatelessWidget {
   const PlaylistListView({super.key});
@@ -72,9 +71,7 @@ class PlaylistListView extends StatelessWidget {
                            */
                           final isPlaying = snapshot.requireData;
                           if (isPlaying) {
-                            return WaveformIcon(
-                              color: theme.colorScheme.onPrimaryContainer,
-                            );
+                            return HeroIcon(HeroIcons.pause);
                           } else {
                             return player.state.position == Duration.zero ||
                                     player.state.completed

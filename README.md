@@ -30,7 +30,6 @@ This app would not have been possible without the wonderful [Flutter](https://fl
 - [media_kit](https://pub.dev/packages/media_kit) - Handles the audio playback wonderfully.
 - [provider](https://pub.dev/packages/provider) - Simplifies dependency injection.
 - [flutter_slidable](https://pub.dev/packages/flutter_slidable) - Wrap you widget so you can flick it and delete it.
-- [waveform_flutter](https://pub.dev/packages/waveform_flutter) - I use this to generate a random waveform during playback.
 - [heroicons](https://pub.dev/packages/heroicons) - A really nice collection of icons. This will probably become my go-to for icons.
 - [path](https://pub.dev/packages/path) - Really nice package for parsing file system and URI paths.
 - [file_picker](https://pub.dev/packages/file_picker) - My go-to package when I want to prompt users to select a file.
