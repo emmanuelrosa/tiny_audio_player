@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:heroicons/heroicons.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
@@ -54,7 +53,9 @@ class PlaylistListView extends StatelessWidget {
                 final key = ValueKey(media);
                 final reorderUsingDragHandle = constraints.maxWidth > 700;
                 final removeUsingSlidable = constraints.maxWidth < 1440;
-                final defaultLeadingIcon = const HeroIcon(HeroIcons.playCircle);
+                final defaultLeadingIcon = const Icon(
+                  Icons.play_circle_outlined,
+                );
                 final leadingIcon = isSelected
                     ? StreamBuilder<bool>(
                         stream: player.stream.playing,
@@ -71,12 +72,12 @@ class PlaylistListView extends StatelessWidget {
                            */
                           final isPlaying = snapshot.requireData;
                           if (isPlaying) {
-                            return HeroIcon(HeroIcons.pause);
+                            return Icon(Icons.pause_rounded);
                           } else {
                             return player.state.position == Duration.zero ||
                                     player.state.completed
                                 ? defaultLeadingIcon
-                                : const HeroIcon(HeroIcons.play);
+                                : const Icon(Icons.play_arrow_rounded);
                           }
                         },
                       )
@@ -94,7 +95,7 @@ class PlaylistListView extends StatelessWidget {
                                 ReorderableDragStartListener(
                                   index: index,
                                   enabled: medias.length > 1,
-                                  child: const Icon(Icons.drag_handle),
+                                  child: const Icon(Icons.drag_handle_rounded),
                                 ),
                                 if (!removeUsingSlidable) SizedBox(width: 15),
                                 if (!removeUsingSlidable)
@@ -102,7 +103,7 @@ class PlaylistListView extends StatelessWidget {
                                     color: theme.colorScheme.error,
                                     onPressed: () =>
                                         _handleRemove(player, index),
-                                    icon: Icon(Icons.delete),
+                                    icon: Icon(Icons.delete_rounded),
                                   ),
                               ],
                             ),
@@ -133,7 +134,7 @@ class PlaylistListView extends StatelessWidget {
                               backgroundColor: theme.colorScheme.errorContainer,
                               foregroundColor:
                                   theme.colorScheme.onErrorContainer,
-                              icon: Icons.delete,
+                              icon: Icons.delete_rounded,
                             ),
                           ],
                         ),

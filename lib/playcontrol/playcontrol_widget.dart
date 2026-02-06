@@ -2,7 +2,6 @@ import 'dart:math';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:heroicons/heroicons.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
 
@@ -56,9 +55,9 @@ class _PlaycontrolWidgetState extends State<PlaycontrolWidget> {
                         SizedBox(width: 5.0),
                         IconButton(
                           onPressed: _handleSliderControlToggle,
-                          icon: HeroIcon(switch (_sliderControlType) {
-                            .progress => HeroIcons.speakerWave,
-                            .volume => HeroIcons.arrowsRightLeft,
+                          icon: Icon(switch (_sliderControlType) {
+                            .progress => Icons.volume_up_rounded,
+                            .volume => Icons.compare_arrows_rounded,
                           }),
                         ),
                       ],
@@ -74,17 +73,17 @@ class _PlaycontrolWidgetState extends State<PlaycontrolWidget> {
                         children: [
                           _ControlButton(
                             onPressed: playing ? _handlePrevious : null,
-                            icon: HeroIcons.backward,
+                            icon: Icons.keyboard_double_arrow_left_rounded,
                           ),
                           _AnimatedControlButton(
-                            firstIcon: HeroIcons.play,
-                            secondIcon: HeroIcons.pause,
+                            firstIcon: Icons.play_arrow_rounded,
+                            secondIcon: Icons.pause_rounded,
                             crossFadeState: playing ? .showSecond : .showFirst,
                             onPressed: _handlePlayOrPause,
                           ),
                           _ControlButton(
                             onPressed: playing ? _handleNext : null,
-                            icon: HeroIcons.forward,
+                            icon: Icons.keyboard_double_arrow_right_rounded,
                           ),
                         ],
                       ),
@@ -124,20 +123,20 @@ class _PlaycontrolWidgetState extends State<PlaycontrolWidget> {
 
 /// A playback control button.
 class _ControlButton extends StatelessWidget {
-  final HeroIcons icon;
+  final IconData icon;
   final Function()? onPressed;
 
   const _ControlButton({required this.icon, this.onPressed});
 
   @override
   Widget build(BuildContext context) =>
-      IconButton(onPressed: onPressed, icon: HeroIcon(icon), iconSize: 32);
+      IconButton(onPressed: onPressed, icon: Icon(icon), iconSize: 32);
 }
 
 /// A animated playback control button.
 class _AnimatedControlButton extends StatelessWidget {
-  final HeroIcons firstIcon;
-  final HeroIcons secondIcon;
+  final IconData firstIcon;
+  final IconData secondIcon;
   final CrossFadeState crossFadeState;
   final Duration duration;
   final Function()? onPressed;
