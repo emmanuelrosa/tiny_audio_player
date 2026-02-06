@@ -14,11 +14,11 @@ class SerializedMedia {
 /// Provides storage for a playlist.
 /// No persistent storage on Web.
 abstract class PlaylistStorageService {
-  factory PlaylistStorageService.init() {
+  static Future<PlaylistStorageService> init(Player player) async {
     if (kIsWeb) {
       return PlaylistStorageServiceNoop();
     } else {
-      return PlaylistStorageServiceHive();
+      return PlaylistStorageServiceHive.init(player);
     }
   }
 
@@ -26,31 +26,39 @@ abstract class PlaylistStorageService {
   Future<List<Media>> getAll();
 
   /// Replaces any persisted playlist with the provided playlist.
-  void putAll(List<Media> medias);
+  Future<void> putAll(List<Media> medias);
 }
 
 /// Provides persistent storage for a playlist using Hive CE.
 class PlaylistStorageServiceHive implements PlaylistStorageService {
-  late Future<Box<SerializedMedia>> _futureBox;
+  final Box<SerializedMedia> _box;
 
-  PlaylistStorageServiceHive() {
+  PlaylistStorageServiceHive._(Box<SerializedMedia> box) : _box = box;
+
+  /// Initializes the [PlaylistStorageServiceHive].
+  /// - Sets up a Hive box.
+  /// - Loads the saved playlist into [Player].
+  /// - Listens to [Player] playlist changes and saves them.
+  static Future<PlaylistStorageServiceHive> init(Player player) async {
     final boxName = '${Constants.namespace}.playlist';
+    final directory = await Constants.getDataDir();
+    final box = directory == null
+        ? await Hive.openBox<SerializedMedia>(boxName)
+        : await Hive.openBox<SerializedMedia>(boxName, path: directory.path);
+    final playlistStorage = PlaylistStorageServiceHive._(box);
+    player.stream.playlist.listen(
+      (playlist) => playlistStorage.putAll(playlist.medias),
+    );
+    final medias = await playlistStorage.getAll();
+    await player.open(Playlist(medias), play: false);
 
-    _futureBox = Constants.getDataDir().then((directory) {
-      if (directory == null) {
-        return Hive.openBox(boxName);
-      } else {
-        return Hive.openBox(boxName, path: directory.path);
-      }
-    });
+    return playlistStorage;
   }
 
   /// Returns the persisted playlist.
   @override
   Future<List<Media>> getAll() async {
-    final box = await _futureBox;
-
-    return box.values
+    return _box.values
         .map(
           (serializedMedia) => Media(
             serializedMedia.uri,
@@ -62,18 +70,16 @@ class PlaylistStorageServiceHive implements PlaylistStorageService {
 
   /// Replaces any persisted playlist with the provided playlist.
   @override
-  void putAll(List<Media> medias) {
-    _futureBox.then((box) async {
-      await box.clear();
-      box.addAll(
-        medias.map(
-          (media) => SerializedMedia(
-            uri: media.uri,
-            title: media.extras?['title'] ?? 'Missing title',
-          ),
+  Future<void> putAll(List<Media> medias) async {
+    await _box.clear();
+    _box.addAll(
+      medias.map(
+        (media) => SerializedMedia(
+          uri: media.uri,
+          title: media.extras?['title'] ?? 'Missing title',
         ),
-      );
-    });
+      ),
+    );
   }
 }
 
@@ -86,5 +92,7 @@ class PlaylistStorageServiceNoop implements PlaylistStorageService {
 
   /// Replaces any persisted playlist with the provided playlist.
   @override
-  void putAll(List<Media> medias) {}
+  Future<void> putAll(List<Media> medias) {
+    return Future.value(null);
+  }
 }

@@ -7,29 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:tiny_audio_player/playlist/playlist_storage_service.dart';
 import 'package:tiny_audio_player/playlist/waveform_icon.dart';
 
-class PlaylistListView extends StatefulWidget {
+class PlaylistListView extends StatelessWidget {
   const PlaylistListView({super.key});
-
-  @override
-  State<PlaylistListView> createState() => _PlaylistListViewState();
-}
-
-class _PlaylistListViewState extends State<PlaylistListView> {
-  @override
-  void initState() {
-    super.initState();
-
-    // Waits for the UI to render a frame before attempting to load
-    // a persisted playlist. Otherwise, Flutter vomits.
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final player = context.read<Player>();
-      final medias = await context.read<PlaylistStorageService>().getAll();
-
-      for (final media in medias) {
-        await player.add(media);
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {

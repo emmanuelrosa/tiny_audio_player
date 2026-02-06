@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:tiny_audio_player/hive/hive_registrar.g.dart';
 import 'package:tiny_audio_player/menu/app_routes.dart';
 import 'package:tiny_audio_player/playlist/file_picker_service.dart';
-import 'package:tiny_audio_player/playlist/playlist_storage_adapter.dart';
 import 'package:tiny_audio_player/playlist/playlist_storage_service.dart';
 import 'package:tiny_audio_player/settings/settings_service.dart';
 
@@ -15,6 +14,7 @@ Future<void> main() async {
   Hive.registerAdapters();
   final player = Player();
   await SettingsService.init(player);
+  await PlaylistStorageService.init(player);
   runApp(MyApp(player: player));
 }
 
@@ -42,32 +42,14 @@ class MyApp extends StatelessWidget {
       providers: [
         Provider<Player>.value(value: player),
         Provider<FilePickerService>(create: (_) => FilePickerService(player)),
-        Provider<PlaylistStorageService>(
-          create: (_) => PlaylistStorageService.init(),
-        ),
       ],
-      builder: (context, _) {
-        final player = context.read<Player>();
-        final playlistStorageService = context.read<PlaylistStorageService>();
-
-        return MultiProvider(
-          providers: [
-            Provider.value(
-              value: PlaylistStorageAdapter(
-                player: player,
-                storageService: playlistStorageService,
-              ),
-            ),
-          ],
-          builder: (context, _) => MaterialApp(
-            title: 'Tiny Audio Player',
-            theme: lightTheme,
-            darkTheme: darkTheme,
-            themeMode: .dark,
-            routes: AppRoutes.routes,
-          ),
-        );
-      },
+      builder: (context, _) => MaterialApp(
+        title: 'Tiny Audio Player',
+        theme: lightTheme,
+        darkTheme: darkTheme,
+        themeMode: .dark,
+        routes: AppRoutes.routes,
+      ),
     );
   }
 }
