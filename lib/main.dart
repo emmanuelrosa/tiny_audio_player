@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hive_ce/hive.dart';
-import 'package:loader_overlay/loader_overlay.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
 import 'package:tiny_audio_player/hive/hive_registrar.g.dart';
-import 'package:tiny_audio_player/home/home_view.dart';
 import 'package:tiny_audio_player/menu/app_routes.dart';
-import 'package:tiny_audio_player/playcontrol/animated_playcontrol_widget.dart';
 import 'package:tiny_audio_player/playcontrol/playcontrol_settings_adapter.dart';
 import 'package:tiny_audio_player/playlist/file_picker_service.dart';
-import 'package:tiny_audio_player/playlist/playlist_list_view.dart';
 import 'package:tiny_audio_player/playlist/playlist_storage_adapter.dart';
 import 'package:tiny_audio_player/playlist/playlist_storage_service.dart';
 import 'package:tiny_audio_player/settings/settings_service.dart';
-import 'package:tiny_audio_player/share/share_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
