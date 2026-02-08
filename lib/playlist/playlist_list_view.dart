@@ -157,7 +157,11 @@ class PlaylistListView extends StatelessWidget {
        * I think it's because I'm using a playlist, which may require
        * a [player.jump()] to start the initial playback.
        */
-      return player.state.playing ? player.pause() : player.jump(index);
+      final index = player.state.playlist.index;
+      final position = player.state.position;
+      return player.state.playing
+          ? player.pause()
+          : player.jump(index).then((_) => player.seek(position));
     } else {
       return player.jump(index);
     }
