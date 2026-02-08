@@ -17,8 +17,8 @@ class PlaycontrolWidget extends StatefulWidget {
   const PlaycontrolWidget({
     super.key,
     required this.player,
-    this.minimalHeight = 155,
-    this.expandedHeight = 250,
+    this.minimalHeight = 135,
+    this.expandedHeight = 240,
   });
 
   @override
@@ -54,31 +54,6 @@ class _PlaycontrolWidgetState extends State<PlaycontrolWidget> {
                           ? Icons.keyboard_arrow_up_rounded
                           : Icons.keyboard_arrow_down_rounded,
                       size: 30,
-                    ),
-                  ),
-                  StreamProvider<bool>.value(
-                    initialData: widget.player.state.playing,
-                    value: widget.player.stream.playing,
-                    child: Consumer<bool>(
-                      builder: (context, playing, _) => Row(
-                        mainAxisAlignment: .spaceEvenly,
-                        children: [
-                          _ControlButton(
-                            onPressed: playing ? _handlePrevious : null,
-                            icon: Icons.keyboard_double_arrow_left_rounded,
-                          ),
-                          _AnimatedControlButton(
-                            firstIcon: Icons.play_arrow_rounded,
-                            secondIcon: Icons.pause_rounded,
-                            crossFadeState: playing ? .showSecond : .showFirst,
-                            onPressed: _handlePlayOrPause,
-                          ),
-                          _ControlButton(
-                            onPressed: playing ? _handleNext : null,
-                            icon: Icons.keyboard_double_arrow_right_rounded,
-                          ),
-                        ],
-                      ),
                     ),
                   ),
                   _PlaybackProgress(player: widget.player, minHeight: 10.0),
@@ -134,19 +109,6 @@ class _PlaycontrolWidgetState extends State<PlaycontrolWidget> {
       },
     );
   }
-
-  Future<void> _handlePlayOrPause() {
-    final index = widget.player.state.playlist.index;
-    final position = widget.player.state.position;
-
-    return widget.player.state.playing
-        ? widget.player.pause()
-        : widget.player.jump(index).then((_) => widget.player.seek(position));
-  }
-
-  Future<void> _handlePrevious() => widget.player.previous();
-
-  Future<void> _handleNext() => widget.player.next();
 
   void _handleSizeToggle() {
     final _PlaycontrolWidgetSize nextSize = switch (_size) {
