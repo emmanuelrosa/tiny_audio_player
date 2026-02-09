@@ -5,8 +5,41 @@ import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
 import 'package:tiny_audio_player/playlist/playlist_storage_service.dart';
 
-class PlaylistListView extends StatelessWidget {
+class PlaylistListView extends StatefulWidget {
   const PlaylistListView({super.key});
+
+  @override
+  State<PlaylistListView> createState() => _PlaylistListViewState();
+}
+
+class _PlaylistListViewState extends State<PlaylistListView> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final messenger = ScaffoldMessenger.of(context);
+      final theme = Theme.of(context);
+      final player = context.read<Player>();
+
+      player.stream.error.listen((errorText) {
+        if (context.mounted) {
+          messenger.showSnackBar(
+            SnackBar(
+              content: Text(
+                errorText,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onErrorContainer,
+                ),
+              ),
+              duration: const Duration(seconds: 8),
+              backgroundColor: theme.colorScheme.errorContainer,
+            ),
+          );
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
