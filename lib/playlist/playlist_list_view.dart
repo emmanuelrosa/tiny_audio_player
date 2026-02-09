@@ -21,9 +21,10 @@ class _PlaylistListViewState extends State<PlaylistListView> {
       final messenger = ScaffoldMessenger.of(context);
       final theme = Theme.of(context);
       final player = context.read<Player>();
+      const ignore = <String>{'MEDIA_ELEMENT_ERROR: Empty src attribute'};
 
       player.stream.error.listen((errorText) {
-        if (context.mounted) {
+        if (context.mounted && !ignore.contains(errorText)) {
           messenger.showSnackBar(
             SnackBar(
               content: Text(
