@@ -6,8 +6,7 @@ A minimalist audio player, written in Dart/Flutter.
 
 ## Features
 
-- A single playlist to queue your audio files.
-- Play/pause, prior/next track, and volume controls.
+- Easy to use - Just add audio tracks to the playlist and tap/click to play.
 - No user data collection.
 - Can be installed as a PWA (progressive web application).
 
@@ -20,8 +19,12 @@ Try it online at [https://emmanuelrosa.github.io/tiny_audio_player/](https://emm
 - To add audio files, click on the "+" button on the lower-right of the screen.
 - To re-order your playlist, drag-n-drop. On narrow screens you'll need to long-press first.
 - To remove a track from your playlist, click on the red trash/rubbish bin. If you don't see one, swipe and then click on the red button.
-- The progress bar also functions as a slider. Use it to seek to a position within the audio track.
-- Clicking on the speaker button next to the progress bar toggles the volume control.
+- To play/pause, simply tap on the appropriate audio track.
+- Expand the playback controls (on the bottom of the screen) for additional options.
+
+## User data
+
+Tiny Audio Player uses a database to store settings, and on native builds, your playlist. This data remains on your computer at all times. It is never shared with anyone.
 
 ## Credits
 
