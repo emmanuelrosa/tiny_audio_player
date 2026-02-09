@@ -21,7 +21,13 @@ class AppBarBuilder {
           IconButton(
             onPressed: () => navigator.pushNamed(AppRoutes.share),
             tooltip: 'Share this app.',
-            icon: Icon(Icons.share),
+            icon: Icon(Icons.share_rounded),
+          ),
+        if (type == .normal)
+          IconButton(
+            onPressed: () => navigator.pushNamed(AppRoutes.about),
+            tooltip: 'Learn about this app.',
+            icon: Icon(Icons.info_outline_rounded),
           ),
       ],
     );
