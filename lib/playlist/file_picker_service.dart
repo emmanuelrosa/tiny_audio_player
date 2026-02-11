@@ -48,7 +48,7 @@ class FilePickerService {
     "mov",
   ];
 
-  Future<void> pickFiles(BuildContext context) async {
+  Future<void> pickFiles(BuildContext context, Player player) async {
     if (context.mounted) {
       _showLoaderOverlay(context);
     }
@@ -70,6 +70,7 @@ class FilePickerService {
                 "title": name != null
                     ? path.basenameWithoutExtension(name)
                     : path.basenameWithoutExtension(file.path!),
+                "volume": player.state.volume,
               };
 
               return file.bytes == null

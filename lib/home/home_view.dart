@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:provider/provider.dart';
 import 'package:tiny_audio_player/menu/app_bar_builder.dart';
 import 'package:tiny_audio_player/playcontrol/animated_playcontrol_widget.dart';
@@ -12,6 +13,7 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final filePicker = Provider.of<FilePickerService>(context);
+    final player = Provider.of<Player>(context);
 
     return Scaffold(
       appBar: AppBarBuilder.build(context, title: 'Playlist'),
@@ -25,7 +27,7 @@ class HomeView extends StatelessWidget {
         duration: Duration(seconds: 1),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => filePicker.pickFiles(context),
+        onPressed: () => filePicker.pickFiles(context, player),
         tooltip: 'Add audio files',
         child: const Icon(Icons.playlist_add_rounded),
       ),

@@ -7,8 +7,23 @@ import 'package:tiny_audio_player/constants.dart';
 class SerializedMedia {
   final String uri;
   final String title;
+  final double volume;
 
-  const SerializedMedia({required this.uri, required this.title});
+  const SerializedMedia({
+    required this.uri,
+    required this.title,
+    required this.volume,
+  });
+
+  /// Creates a [SerializedMedia] from a [Media].
+  static SerializedMedia fromMedia(Media media) => SerializedMedia(
+    uri: media.uri,
+    title: media.extras?['title'] ?? 'Missing title',
+    volume: media.extras?['volume'] ?? 100.0,
+  );
+
+  /// Converts the [SerializedMedia] to a [Media].
+  Media toMedia() => Media(uri, extras: {'title': title, 'volume': volume});
 }
 
 /// Provides storage for a playlist.
@@ -27,6 +42,9 @@ abstract class PlaylistStorageService {
 
   /// Replaces any persisted playlist with the provided playlist.
   Future<void> putAll(List<Media> medias);
+
+  /// Updates the [Media] at the provided index.
+  Future<void> put(int index, Media media);
 }
 
 /// Provides persistent storage for a playlist using Hive CE.
@@ -59,12 +77,7 @@ class PlaylistStorageServiceHive implements PlaylistStorageService {
   @override
   Future<List<Media>> getAll() async {
     return _box.values
-        .map(
-          (serializedMedia) => Media(
-            serializedMedia.uri,
-            extras: {'title': serializedMedia.title},
-          ),
-        )
+        .map((serializedMedia) => serializedMedia.toMedia())
         .toList();
   }
 
@@ -72,14 +85,13 @@ class PlaylistStorageServiceHive implements PlaylistStorageService {
   @override
   Future<void> putAll(List<Media> medias) async {
     await _box.clear();
-    _box.addAll(
-      medias.map(
-        (media) => SerializedMedia(
-          uri: media.uri,
-          title: media.extras?['title'] ?? 'Missing title',
-        ),
-      ),
-    );
+    _box.addAll(medias.map(SerializedMedia.fromMedia));
+  }
+
+  /// Updates the [Media] at the provided index.
+  @override
+  Future<void> put(int index, Media media) async {
+    return _box.putAt(index, SerializedMedia.fromMedia(media));
   }
 }
 
@@ -92,7 +104,9 @@ class PlaylistStorageServiceNoop implements PlaylistStorageService {
 
   /// Replaces any persisted playlist with the provided playlist.
   @override
-  Future<void> putAll(List<Media> medias) {
-    return Future.value(null);
-  }
+  Future<void> putAll(List<Media> medias) => Future.value(null);
+
+  /// Updates the [Media] at the provided index.
+  @override
+  Future<void> put(int index, Media media) => Future.value(null);
 }

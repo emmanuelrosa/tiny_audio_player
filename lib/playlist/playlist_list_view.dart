@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:media_kit/media_kit.dart';
@@ -13,17 +15,35 @@ class PlaylistListView extends StatefulWidget {
 }
 
 class _PlaylistListViewState extends State<PlaylistListView> {
+  late StreamSubscription<String> _errorSubscription;
+  late StreamSubscription<double> _volumeSubscription;
+  late StreamSubscription<Playlist> _playlistSubscription;
+
   @override
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       final messenger = ScaffoldMessenger.of(context);
       final theme = Theme.of(context);
       final player = context.read<Player>();
+      final playlistStorageService = context.read<PlaylistStorageService>();
       const ignore = <String>{'MEDIA_ELEMENT_ERROR: Empty src attribute'};
 
-      player.stream.error.listen((errorText) {
+      /* If a playlist is loaded from storage,
+       * obtain the volume for the selected audio track
+       * and update the player's volume.
+       */
+      if (player.state.playlist.medias.isNotEmpty) {
+        final index = player.state.playlist.index;
+        final media = player.state.playlist.medias[index];
+        final double volume = media.extras?['volume'] ?? player.state.volume;
+
+        await player.setVolume(volume);
+      }
+
+      // When there's a player error, display it as a snackbar.
+      _errorSubscription = player.stream.error.listen((errorText) {
         if (context.mounted && !ignore.contains(errorText)) {
           messenger.showSnackBar(
             SnackBar(
@@ -39,7 +59,41 @@ class _PlaylistListViewState extends State<PlaylistListView> {
           );
         }
       });
+
+      /* When the volume is changed, remember the volume setting
+       * for the current audio track.
+       */
+      _volumeSubscription = player.stream.volume.listen((volume) {
+        if (player.state.playlist.medias.isNotEmpty) {
+          final index = player.state.playlist.index;
+          final media = player.state.playlist.medias[index];
+
+          media.extras?.update('volume', (_) => volume);
+          playlistStorageService.put(index, media);
+        }
+      });
+
+      /* When the audio track is changed,
+       * load its volume setting and apply it to the player.
+       */
+      _playlistSubscription = player.stream.playlist.listen((playlist) async {
+        if (playlist.medias.isNotEmpty) {
+          final index = player.state.playlist.index;
+          final media = player.state.playlist.medias[index];
+          final double volume = media.extras?['volume'] ?? player.state.volume;
+
+          await player.setVolume(volume);
+        }
+      });
     });
+  }
+
+  @override
+  void dispose() {
+    _errorSubscription.cancel();
+    _volumeSubscription.cancel();
+    _playlistSubscription.cancel();
+    super.dispose();
   }
 
   @override

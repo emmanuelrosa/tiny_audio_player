@@ -14,14 +14,19 @@ Future<void> main() async {
   Hive.registerAdapters();
   final player = Player();
   await SettingsService.init(player);
-  await PlaylistStorageService.init(player);
-  runApp(MyApp(player: player));
+  final playlistStorageService = await PlaylistStorageService.init(player);
+  runApp(MyApp(player: player, playlistStorageService: playlistStorageService));
 }
 
 class MyApp extends StatelessWidget {
   final Player player;
+  final PlaylistStorageService playlistStorageService;
 
-  const MyApp({super.key, required this.player});
+  const MyApp({
+    super.key,
+    required this.player,
+    required this.playlistStorageService,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +46,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<Player>.value(value: player),
+        Provider<PlaylistStorageService>.value(value: playlistStorageService),
         Provider<FilePickerService>(create: (_) => FilePickerService(player)),
       ],
       builder: (context, _) => MaterialApp(

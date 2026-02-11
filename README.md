@@ -12,6 +12,12 @@ A minimalist audio player, written in Dart/Flutter.
 
 The main concept within *Tiny Audio Player* is the playlist. You simply add the audio tracks you want to listen to, sort them as you wish, and press _PLAY_.
 
+## Bonus features
+
+### Per-track volume
+
+You know how sometimes there's an audio track that is just too loud compared to the others? With *Tiny Audio Player*, you can simply adjust the volume and it will automatically apply your adjustments as it goes through each track on your playlist.
+
 ## Getting Started
 
 Try it online at [https://emmanuelrosa.github.io/tiny_audio_player/](https://emmanuelrosa.github.io/tiny_audio_player/).

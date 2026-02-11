@@ -19,17 +19,20 @@ class SerializedMediaAdapter extends TypeAdapter<SerializedMedia> {
     return SerializedMedia(
       uri: fields[0] as String,
       title: fields[1] as String,
+      volume: (fields[2] as num).toDouble(),
     );
   }
 
   @override
   void write(BinaryWriter writer, SerializedMedia obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.uri)
       ..writeByte(1)
-      ..write(obj.title);
+      ..write(obj.title)
+      ..writeByte(2)
+      ..write(obj.volume);
   }
 
   @override

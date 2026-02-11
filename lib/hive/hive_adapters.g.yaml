@@ -5,12 +5,14 @@ nextTypeId: 2
 types:
   SerializedMedia:
     typeId: 0
-    nextIndex: 2
+    nextIndex: 3
     fields:
       uri:
         index: 0
       title:
         index: 1
+      volume:
+        index: 2
   PlaylistMode:
     typeId: 1
     nextIndex: 3
