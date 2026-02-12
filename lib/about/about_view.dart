@@ -1,11 +1,9 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:tiny_audio_player/about/project_link.dart';
 import 'package:tiny_audio_player/about/version_text.dart';
 import 'package:tiny_audio_player/menu/app_bar_builder.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-final _url = Uri.parse('https://github.com/emmanuelrosa/tiny_audio_player/');
 
 /// A page which shows some information about this app.
 class AboutView extends StatelessWidget {
@@ -44,23 +42,7 @@ class AboutView extends StatelessWidget {
                     Text(
                       'To learn more about the project, visit the link below.',
                     ),
-                  if (constraints.maxWidth > minWidth)
-                    Row(
-                      mainAxisAlignment: .center,
-                      children: [
-                        TextButton(
-                          onPressed: () => _openInBrowser(_url),
-                          child: Text(
-                            _url.toString(),
-                            overflow: .ellipsis,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: Colors.lightBlue,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                  if (constraints.maxWidth > minWidth) const ProjectLink(),
                 ],
               ),
             );
@@ -69,6 +51,4 @@ class AboutView extends StatelessWidget {
       ),
     );
   }
-
-  Future<void> _openInBrowser(Uri url) => launchUrl(url);
 }
