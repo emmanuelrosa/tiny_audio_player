@@ -8,7 +8,14 @@ class VersionText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Provider<Future<PackageInfo>>(
-    create: (_) => PackageInfo.fromPlatform(),
+    create: (_) {
+      const baseUrlVarName = 'BASE_URL';
+      const baseUrl = bool.hasEnvironment(baseUrlVarName)
+          ? String.fromEnvironment(baseUrlVarName)
+          : null;
+
+      return PackageInfo.fromPlatform(baseUrl: baseUrl);
+    },
     builder: (context, _) => FutureBuilder(
       future: context.read<Future<PackageInfo>>(),
       builder: (context, snapshot) {

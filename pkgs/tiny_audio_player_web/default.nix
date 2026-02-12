@@ -9,7 +9,7 @@
     src = ./../..;
     pubspecLock = lib.importJSON "${src}/pubspec.lock.json";
     targetFlutterPlatform = "web";
-    flutterBuildFlags = [ "--wasm" "--base-href" "/tiny_audio_player/" ];
+    flutterBuildFlags = [ "--wasm" "--base-href" "/tiny_audio_player/" "--dart-define=BASE_HREF=/tiny_audio_player/" ];
 
     meta = {
       homepage = "https://github.com/emmanuelrosa/tiny_audio_player";
