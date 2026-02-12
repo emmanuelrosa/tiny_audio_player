@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tiny_audio_player/menu/app_bar_builder.dart';
 
 const _url = 'https://emmanuelrosa.github.io/tiny_audio_player/';
@@ -22,17 +23,15 @@ class ShareView extends StatelessWidget {
           children: [
             LayoutBuilder(
               builder: (context, constraints) {
-                const imageSize = 111.0;
-                final maxSize = math.min(
-                  constraints.maxWidth,
-                  constraints.maxHeight,
-                );
                 final size = math.min(400.0, constraints.maxWidth);
-                final scale = imageSize / size;
 
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
-                  child: Image.asset('assets/qrcode.png', scale: scale),
+                  child: SvgPicture.asset(
+                    'assets/qrcode.svg',
+                    width: size,
+                    height: size,
+                  ),
                 );
               },
             ),
