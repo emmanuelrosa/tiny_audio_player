@@ -1,37 +1,19 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:package_info_plus/package_info_plus.dart';
+import 'package:tiny_audio_player/about/version_text.dart';
 import 'package:tiny_audio_player/menu/app_bar_builder.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 final _url = Uri.parse('https://github.com/emmanuelrosa/tiny_audio_player/');
 
 /// A page which shows some information about this app.
-class AboutView extends StatefulWidget {
+class AboutView extends StatelessWidget {
   const AboutView({super.key});
-
-  @override
-  State<AboutView> createState() => _AboutViewState();
-}
-
-class _AboutViewState extends State<AboutView> {
-  PackageInfo? _packageInfo;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final packageInfo = await PackageInfo.fromPlatform();
-      setState(() => _packageInfo = packageInfo);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final version = _packageInfo == null ? "Unknown" : _packageInfo!.version;
 
     return Scaffold(
       appBar: AppBarBuilder.build(context, title: 'About', type: .minimal),
@@ -51,7 +33,7 @@ class _AboutViewState extends State<AboutView> {
                     'Tiny Audio Player',
                     style: theme.textTheme.headlineLarge,
                   ),
-                  Text('version: $version'),
+                  const VersionText(),
                   Text(
                     'Tiny Audio Player is an open-source minimalist audio player created by Emmanuel Rosa.',
                   ),
