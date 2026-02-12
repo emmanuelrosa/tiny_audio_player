@@ -9,6 +9,9 @@
    id="svg1"
    inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
    sodipodi:docname="splash.svg"
+   inkscape:export-filename="splash.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -24,11 +27,11 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:export-bgcolor="#181c2000"
-     inkscape:zoom="0.4660266"
-     inkscape:cx="499.97146"
-     inkscape:cy="391.60855"
-     inkscape:window-width="1888"
-     inkscape:window-height="978"
+     inkscape:zoom="0.18606286"
+     inkscape:cx="502.51835"
+     inkscape:cy="392.34053"
+     inkscape:window-width="1077"
+     inkscape:window-height="981"
      inkscape:window-x="26"
      inkscape:window-y="23"
      inkscape:window-maximized="0"
@@ -39,39 +42,43 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <path
-       stroke-linecap="round"
-       stroke-linejoin="round"
-       d="M 81.824386,90.688917 133.10809,41.777479 c 5.13254,-4.888956 13.90102,-1.426201 13.9074,5.492171 v 164.55737 c -0.006,6.91819 -8.77501,10.3806 -13.9074,5.49179 L 81.824386,168.40775 H 57.486389 c -9.56139,0 -18.514274,-5.25365 -21.056747,-14.03065 -2.330587,-8.08881 -3.507436,-16.4403 -3.498761,-24.82895 0,-8.60076 1.216763,-16.92186 3.498761,-24.82859 2.54235,-8.787168 11.495357,-14.030643 21.056747,-14.030643 z"
-       id="path1"
-       style="fill:#006d81;fill-opacity:1;stroke-width:0.264584"
-       sodipodi:nodetypes="ccccccscccsc" />
-    <rect
-       style="fill:#006d81;fill-opacity:1;stroke-width:10.9;stroke-linecap:round;stroke-linejoin:round;paint-order:markers fill stroke"
-       id="rect1"
-       width="70.155281"
-       height="23.916616"
-       x="168.21642"
-       y="57.817924"
-       rx="9.540494"
-       ry="10.131114" />
-    <rect
-       style="fill:#006d81;fill-opacity:1;stroke-width:10.9;stroke-linecap:round;stroke-linejoin:round;paint-order:markers fill stroke"
-       id="rect2"
-       width="70.155281"
-       height="23.916616"
-       x="167.83305"
-       y="121.02612"
-       rx="9.540494"
-       ry="10.131114" />
-    <rect
-       style="fill:#006d81;fill-opacity:1;stroke-width:10.9;stroke-linecap:round;stroke-linejoin:round;paint-order:markers fill stroke"
-       id="rect3"
-       width="70.155281"
-       height="23.916616"
-       x="167.06635"
-       y="184.23431"
-       rx="9.540494"
-       ry="10.131114" />
+    <g
+       id="g1"
+       style="fill:#0c4a73;fill-opacity:1">
+      <path
+         stroke-linecap="round"
+         stroke-linejoin="round"
+         d="M 81.824386,90.688917 133.10809,41.777479 c 5.13254,-4.888956 13.90102,-1.426201 13.9074,5.492171 v 164.55737 c -0.006,6.91819 -8.77501,10.3806 -13.9074,5.49179 L 81.824386,168.40775 H 57.486389 c -9.56139,0 -18.514274,-5.25365 -21.056747,-14.03065 -2.330587,-8.08881 -3.507436,-16.4403 -3.498761,-24.82895 0,-8.60076 1.216763,-16.92186 3.498761,-24.82859 2.54235,-8.787168 11.495357,-14.030643 21.056747,-14.030643 z"
+         id="path1"
+         style="fill:#0c4a73;fill-opacity:1;stroke-width:0.264584"
+         sodipodi:nodetypes="ccccccscccsc" />
+      <rect
+         style="fill:#0c4a73;fill-opacity:1;stroke-width:10.9;stroke-linecap:round;stroke-linejoin:round;paint-order:markers fill stroke"
+         id="rect1"
+         width="70.155281"
+         height="23.916616"
+         x="168.21642"
+         y="57.817924"
+         rx="9.540494"
+         ry="10.131114" />
+      <rect
+         style="fill:#0c4a73;fill-opacity:1;stroke-width:10.9;stroke-linecap:round;stroke-linejoin:round;paint-order:markers fill stroke"
+         id="rect2"
+         width="70.155281"
+         height="23.916616"
+         x="167.83305"
+         y="121.02612"
+         rx="9.540494"
+         ry="10.131114" />
+      <rect
+         style="fill:#0c4a73;fill-opacity:1;stroke-width:10.9;stroke-linecap:round;stroke-linejoin:round;paint-order:markers fill stroke"
+         id="rect3"
+         width="70.155281"
+         height="23.916616"
+         x="167.06635"
+         y="184.23431"
+         rx="9.540494"
+         ry="10.131114" />
+    </g>
   </g>
 </svg>
