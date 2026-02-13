@@ -66,7 +66,10 @@ class _PlaycontrolWidgetState extends State<PlaycontrolWidget> {
                         children: [
                           IconButton(
                             onPressed: _handleClearPlaylist,
-                            icon: Icon(Icons.clear_all_rounded),
+                            icon: Icon(
+                              Icons.clear_all_rounded,
+                              color: theme.colorScheme.error,
+                            ),
                             tooltip: 'Clear playlist',
                           ),
                           IconButton(
