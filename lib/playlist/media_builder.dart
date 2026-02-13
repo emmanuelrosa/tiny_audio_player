@@ -18,7 +18,9 @@ class MediaBuilder {
   }) {
     final extras = _createExtrasFromFile(name: filePath, volume: volume);
 
-    return Future.value(Media(path.toUri(filePath).toString(), extras: extras));
+    return Future.value(
+      Media(path.toUri(path.normalize(filePath)).toString(), extras: extras),
+    );
   }
 
   /// Creates a [Media] from a byte array.

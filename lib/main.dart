@@ -8,13 +8,16 @@ import 'package:tiny_audio_player/playlist/file_picker_service.dart';
 import 'package:tiny_audio_player/playlist/playlist_storage_service.dart';
 import 'package:tiny_audio_player/settings/settings_service.dart';
 
-Future<void> main() async {
+Future<void> main(List<String> arguments) async {
   WidgetsFlutterBinding.ensureInitialized();
   MediaKit.ensureInitialized();
   Hive.registerAdapters();
   final player = Player();
   await SettingsService.init(player);
-  final playlistStorageService = await PlaylistStorageService.init(player);
+  final playlistStorageService = await PlaylistStorageService.init(
+    player: player,
+    paths: arguments,
+  );
   runApp(MyApp(player: player, playlistStorageService: playlistStorageService));
 }
 

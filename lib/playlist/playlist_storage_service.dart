@@ -33,11 +33,16 @@ class SerializedMedia {
 /// Provides storage for a playlist.
 /// No persistent storage on Web.
 abstract class PlaylistStorageService {
-  static Future<PlaylistStorageService> init(Player player) async {
+  /// Intializes a [PlaylistStorageService] implementation.
+  /// If [paths] is not empty, it is used to replace the contents of the playlist.
+  static Future<PlaylistStorageService> init({
+    required Player player,
+    required List<String> paths,
+  }) async {
     if (kIsWeb) {
       return PlaylistStorageServiceNoop();
     } else {
-      return PlaylistStorageServiceHive.init(player);
+      return PlaylistStorageServiceHive.init(player, paths);
     }
   }
 
@@ -61,7 +66,10 @@ class PlaylistStorageServiceHive implements PlaylistStorageService {
   /// - Sets up a Hive box.
   /// - Loads the saved playlist into [Player].
   /// - Listens to [Player] playlist changes and saves them.
-  static Future<PlaylistStorageServiceHive> init(Player player) async {
+  static Future<PlaylistStorageServiceHive> init(
+    Player player,
+    List<String> paths,
+  ) async {
     final boxName = '${Constants.namespace}.playlist';
     final directory = await Constants.getDataDir();
     final box = directory == null
@@ -71,7 +79,16 @@ class PlaylistStorageServiceHive implements PlaylistStorageService {
     player.stream.playlist.listen(
       (playlist) async => await playlistStorage.putAll(playlist.medias),
     );
-    final medias = await playlistStorage.getAll();
+    final medias = await (paths.isEmpty
+        ? playlistStorage.getAll()
+        : Future.wait(
+            paths.map(
+              (filePath) async => await MediaBuilder.fromPathString(
+                filePath: filePath,
+                volume: player.state.volume,
+              ),
+            ),
+          ));
     await player.open(Playlist(medias), play: false);
 
     return playlistStorage;
