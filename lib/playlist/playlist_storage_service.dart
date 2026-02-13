@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:hive_ce/hive_ce.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:tiny_audio_player/constants.dart';
+import 'package:tiny_audio_player/playlist/media_builder.dart';
 
 /// A minimal serializable version of MediaKit's [Media].
 class SerializedMedia {
@@ -23,7 +24,10 @@ class SerializedMedia {
   );
 
   /// Converts the [SerializedMedia] to a [Media].
-  Media toMedia() => Media(uri, extras: {'title': title, 'volume': volume});
+  Media toMedia() => Media(
+    uri,
+    extras: MediaBuilder.createExtras(title: title, volume: volume),
+  );
 }
 
 /// Provides storage for a playlist.

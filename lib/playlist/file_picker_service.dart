@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:path/path.dart' as path;
+import 'package:tiny_audio_player/playlist/media_builder.dart';
 
 /// Handles prompting the user for one or more files to add to the playlist,
 /// and adds the files to the playlist.
@@ -65,21 +66,18 @@ class FilePickerService {
         : await Future.wait(
             List.generate(result.files.length, (index) {
               final file = result.files[index];
-              final name = result.names[index];
-              final extras = <String, dynamic>{
-                "title": name != null
-                    ? path.basenameWithoutExtension(name)
-                    : path.basenameWithoutExtension(file.path!),
-                "volume": player.state.volume,
-              };
+              final name = result.names[index] ?? file.name;
 
               return file.bytes == null
-                  ? Future.value(
-                      Media(path.toUri(file.path!).toString(), extras: extras),
+                  ? MediaBuilder.fromPathString(
+                      filePath: file.path!,
+                      volume: player.state.volume,
                     )
-                  : Media.memory(
-                      file.bytes!,
-                    ).then((media) => Media(media.uri, extras: extras));
+                  : MediaBuilder.fromBytes(
+                      bytes: file.bytes!,
+                      name: name,
+                      volume: player.state.volume,
+                    );
             }),
           );
 
