@@ -18,6 +18,16 @@
       system
     );
   in {
+    lib = forAllSystems (pkgs: system: {
+      fromYAML = path: builtins.fromJSON(builtins.readFile(pkgs.runCommand "yaml-to-json" {
+        nativeBuildInputs = [ pkgs.yq ];
+      } ''
+        yq < ${path} > $out
+      ''));
+
+      appVersion = (self.lib."${system}".fromYAML ./pubspec.yaml).version;
+    });
+
     packages = forAllSystems (pkgs: system: {
       dart-flutter = pkgs.callPackage ./pkgs/dart-flutter {};
 
@@ -25,9 +35,13 @@
         dart = self.packages."${system}".dart-flutter;
       };
 
-      tiny_audio_player = pkgs.callPackage ./pkgs/tiny_audio_player {};
+      tiny_audio_player = pkgs.callPackage ./pkgs/tiny_audio_player {
+        inherit (self.lib."${system}") appVersion;
+      };
 
-      tiny_audio_player_web = pkgs.callPackage ./pkgs/tiny_audio_player_web {};
+      tiny_audio_player_web = pkgs.callPackage ./pkgs/tiny_audio_player_web {
+        inherit (self.lib."${system}") appVersion;
+      };
 
       default = self.packages."${system}".tiny_audio_player;
     });

@@ -1,11 +1,12 @@
 { flutter
+, appVersion
 , runCommand
 , lib
 , gnutar
 }: let
   app = flutter.buildFlutterApplication rec {
     pname = "tiny_audio_player_web";
-    version = "1.0.0";
+    version = appVersion;
     src = ./../..;
     pubspecLock = lib.importJSON "${src}/pubspec.lock.json";
     targetFlutterPlatform = "web";

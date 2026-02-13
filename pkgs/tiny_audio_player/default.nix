@@ -1,4 +1,5 @@
 { flutter
+, appVersion
 , lib
 , xdg-user-dirs
 , mpv-unwrapped
@@ -7,7 +8,7 @@
 , imagemagick
 }: flutter.buildFlutterApplication rec {
   pname = "tiny_audio_player";
-  version = "1.0.0";
+  version = appVersion;
   src = ./../..;
   nativeBuildInputs = [ copyDesktopItems imagemagick ];
   pubspecLock = lib.importJSON "${src}/pubspec.lock.json";
