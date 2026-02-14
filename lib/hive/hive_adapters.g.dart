@@ -19,7 +19,7 @@ class SerializedMediaAdapter extends TypeAdapter<SerializedMedia> {
     return SerializedMedia(
       uri: fields[0] as String,
       title: fields[1] as String,
-      volume: (fields[2] as num).toDouble(),
+      volume: fields[2] == null ? 100.0 : (fields[2] as num).toDouble(),
     );
   }
 
