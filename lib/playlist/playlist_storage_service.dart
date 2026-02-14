@@ -13,7 +13,7 @@ class SerializedMedia {
   const SerializedMedia({
     required this.uri,
     required this.title,
-    required this.volume,
+    this.volume = 100.0,
   });
 
   /// Creates a [SerializedMedia] from a [Media].
