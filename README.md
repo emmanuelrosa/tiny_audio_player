@@ -28,6 +28,16 @@ Try it online at [https://emmanuelrosa.github.io/tiny_audio_player/](https://emm
 - To play/pause, simply tap on the appropriate audio track.
 - Expand the playback controls (on the bottom of the screen) for additional options.
 
+### Other platforms
+
+Aside from the web-based build, *Tiny Audio Player* is also available for the following Linux distributions:
+
+- NixOS: This repository is a Nix flake.
+- Debian 13
+- Ubuntu 24.04
+
+Check the [releases](releases) page for the downloads.
+
 ## User data
 
 Tiny Audio Player uses a database to store settings, and on native builds, your playlist. This data remains on your computer at all times. It is never shared with anyone.

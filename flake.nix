@@ -43,6 +43,12 @@
         inherit (self.lib."${system}") appVersion;
       };
 
+      tiny_audio_player_deb = pkgs.callPackage ./pkgs/tiny_audio_player_deb {
+        inherit system;
+        inherit (self.lib."${system}") appVersion;
+        tiny_audio_player = self.packages."${system}".tiny_audio_player;
+      };
+
       default = self.packages."${system}".tiny_audio_player;
     });
   };
