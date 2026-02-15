@@ -15,7 +15,20 @@ class Constants {
       return Future.value(null);
     }
 
-    final docsDir = await getApplicationDocumentsDirectory();
-    return Future.value(Directory(path.join(docsDir.path, appName)));
+    try {
+      final docsDir = await getApplicationDocumentsDirectory();
+      return Future.value(Directory(path.join(docsDir.path, appName)));
+    } on MissingPlatformDirectoryException {
+      return getHomeDirectory();
+    }
+  }
+
+  static Future<Directory?> getHomeDirectory() async {
+    return Future.value(switch (Platform.operatingSystem) {
+      'linux' => Directory(Platform.environment['HOME']!),
+      'macos' => Directory(Platform.environment['HOME']!),
+      'windows' => Directory(Platform.environment['USERPROFILE']!),
+      _ => null,
+    });
   }
 }
