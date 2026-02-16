@@ -36,7 +36,7 @@ Aside from the web-based build, *Tiny Audio Player* is also available for the fo
 - Debian 13
 - Ubuntu 24.04
 
-Check the [releases](releases) page for the downloads.
+Check the [releases](https://github.com/emmanuelrosa/tiny_audio_player/releases) page for the downloads.
 
 ## User data
 
