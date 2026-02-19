@@ -19,7 +19,10 @@ class Constants {
       final docsDir = await getApplicationDocumentsDirectory();
       return Future.value(Directory(path.join(docsDir.path, appName)));
     } on MissingPlatformDirectoryException {
-      return getHomeDirectory();
+      final homeDir = await getHomeDirectory();
+      return Future.value(
+        homeDir == null ? null : Directory(path.join(homeDir.path, appName)),
+      );
     }
   }
 
