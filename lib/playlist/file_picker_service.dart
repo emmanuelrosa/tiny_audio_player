@@ -13,7 +13,11 @@ class FilePickerService {
 
   const FilePickerService(this.player);
 
-  static const allowedExtensions = [
+  static List<String> get allowedExtensions =>
+      _allowedExtensions +
+      _allowedExtensions.map((string) => string.toUpperCase()).toList();
+
+  static const _allowedExtensions = [
     "mp3",
     "m4a",
     "aac",
