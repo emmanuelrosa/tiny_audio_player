@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:media_kit/media_kit.dart';
-import 'package:path/path.dart' as path;
 import 'package:tiny_audio_player/playlist/media_builder.dart';
 
 /// Handles prompting the user for one or more files to add to the playlist,
