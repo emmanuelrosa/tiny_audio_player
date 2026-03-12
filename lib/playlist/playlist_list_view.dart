@@ -85,6 +85,9 @@ class _PlaylistListViewState extends State<PlaylistListView> {
           final double volume = media.extras?['volume'] ?? player.state.volume;
 
           await player.setVolume(volume);
+        } else {
+          // Forget the player position when the playlist is cleared.
+          await player.seek(Duration.zero);
         }
       });
     });
