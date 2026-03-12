@@ -17,8 +17,8 @@ class PlaycontrolWidget extends StatefulWidget {
   const PlaycontrolWidget({
     super.key,
     required this.player,
-    this.minimalHeight = 135,
-    this.expandedHeight = 240,
+    this.minimalHeight = 150,
+    this.expandedHeight = 200,
   });
 
   @override
@@ -49,6 +49,8 @@ class _PlaycontrolWidgetState extends State<PlaycontrolWidget> {
                 children: [
                   IconButton(
                     onPressed: _handleSizeToggle,
+                    padding: EdgeInsetsGeometry.all(5.0),
+                    hoverColor: theme.colorScheme.surfaceContainerLow,
                     icon: Icon(
                       _size == .minimal
                           ? Icons.keyboard_arrow_up_rounded
@@ -57,8 +59,7 @@ class _PlaycontrolWidgetState extends State<PlaycontrolWidget> {
                     ),
                   ),
                   _PlaybackProgress(player: widget.player, minHeight: 10.0),
-                  if (_size == .expanded)
-                    _VolumeControl(player: widget.player, minHeight: 10.0),
+                  _VolumeControl(player: widget.player, minHeight: 10.0),
                   if (_size == .expanded)
                     SizedBox(
                       child: Row(
