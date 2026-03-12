@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
+import 'package:tiny_audio_player/extension/player_extension.dart';
 import 'package:tiny_audio_player/playlist/playlist_storage_service.dart';
 
 class PlaylistListView extends StatefulWidget {
@@ -126,110 +128,132 @@ class _PlaylistListViewState extends State<PlaylistListView> {
 
           final playlist = snapshot.requireData;
 
-          return LayoutBuilder(
-            builder: (context, constraints) => ReorderableListView.builder(
-              buildDefaultDragHandles: false,
-              onReorder: player.move,
-              itemCount: medias.length,
-              itemBuilder: (context, index) {
-                final theme = Theme.of(context);
-                final isSelected = playlist.index == index;
-                final media = medias[index];
-                final title =
-                    media.extras?['title'] ??
-                    path.basenameWithoutExtension(media.uri);
-                final key = ValueKey(media);
-                final reorderUsingDragHandle = constraints.maxWidth > 700;
-                final removeUsingSlidable = constraints.maxWidth < 1440;
-                final defaultLeadingIcon = const Icon(
-                  Icons.play_circle_outlined,
-                );
-                final leadingIcon = isSelected
-                    ? StreamBuilder<bool>(
-                        stream: player.stream.playing,
-                        initialData: player.state.playing,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) {
-                            return defaultLeadingIcon;
-                          }
-
-                          /* For some reason, sometimes the player is in a playing state,
-                           * yet it's not actually playing audio.
-                           * Not only is there nothing audible, the position and duration
-                           * remain at zero.
-                           */
-                          final isPlaying = snapshot.requireData;
-                          if (isPlaying) {
-                            return Icon(Icons.pause_rounded);
-                          } else {
-                            return player.state.position == Duration.zero ||
-                                    player.state.completed
-                                ? defaultLeadingIcon
-                                : const Icon(Icons.play_arrow_rounded);
-                          }
-                        },
-                      )
-                    : defaultLeadingIcon;
-                final tile = GestureDetector(
-                  onTap: () => _handleTap(player, isSelected, index),
-                  child: ListTile(
-                    title: Text(title, maxLines: 1, overflow: .ellipsis),
-                    leading: leadingIcon,
-                    trailing: reorderUsingDragHandle
-                        ? SizedBox(
-                            width: removeUsingSlidable ? 28 : 80,
-                            child: Row(
-                              children: [
-                                ReorderableDragStartListener(
-                                  index: index,
-                                  enabled: medias.length > 1,
-                                  child: const Icon(Icons.drag_handle_rounded),
-                                ),
-                                if (!removeUsingSlidable) SizedBox(width: 15),
-                                if (!removeUsingSlidable)
-                                  IconButton(
-                                    color: theme.colorScheme.error,
-                                    onPressed: () =>
-                                        _handleRemove(player, index),
-                                    icon: Icon(Icons.delete_rounded),
-                                  ),
-                              ],
-                            ),
-                          )
-                        : null,
-                  ),
-                );
-                final card = Card(
-                  color: isSelected ? theme.colorScheme.primaryContainer : null,
-                  margin: const EdgeInsetsGeometry.all(0),
-                  child: tile,
-                );
-                final child = reorderUsingDragHandle
-                    ? card
-                    : ReorderableDelayedDragStartListener(
-                        index: index,
-                        enabled: medias.length > 1,
-                        child: card,
+          return Shortcuts(
+            shortcuts: {
+              const SingleActivator(
+                LogicalKeyboardKey.space,
+                includeRepeats: false,
+              ): _PlayPauseIntent(),
+            },
+            child: Actions(
+              actions: {_PlayPauseIntent: _PlayPauseAction(player)},
+              child: Focus(
+                autofocus: true,
+                child: LayoutBuilder(
+                  builder: (context, constraints) => ReorderableListView.builder(
+                    buildDefaultDragHandles: false,
+                    onReorder: player.move,
+                    itemCount: medias.length,
+                    itemBuilder: (context, index) {
+                      final theme = Theme.of(context);
+                      final isSelected = playlist.index == index;
+                      final media = medias[index];
+                      final title =
+                          media.extras?['title'] ??
+                          path.basenameWithoutExtension(media.uri);
+                      final key = ValueKey(media);
+                      final reorderUsingDragHandle = constraints.maxWidth > 700;
+                      final removeUsingSlidable = constraints.maxWidth < 1440;
+                      final defaultLeadingIcon = const Icon(
+                        Icons.play_circle_outlined,
                       );
-                return removeUsingSlidable
-                    ? Slidable(
-                        key: key,
-                        startActionPane: ActionPane(
-                          motion: const BehindMotion(),
-                          children: [
-                            SlidableAction(
-                              onPressed: (_) => _handleRemove(player, index),
-                              backgroundColor: theme.colorScheme.errorContainer,
-                              foregroundColor:
-                                  theme.colorScheme.onErrorContainer,
-                              icon: Icons.delete_rounded,
-                            ),
-                          ],
+                      final leadingIcon = isSelected
+                          ? StreamBuilder<bool>(
+                              stream: player.stream.playing,
+                              initialData: player.state.playing,
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError) {
+                                  return defaultLeadingIcon;
+                                }
+
+                                /* For some reason, sometimes the player is in a playing state,
+                                 * yet it's not actually playing audio.
+                                 * Not only is there nothing audible, the position and duration
+                                 * remain at zero.
+                                 */
+                                final isPlaying = snapshot.requireData;
+                                if (isPlaying) {
+                                  return Icon(Icons.pause_rounded);
+                                } else {
+                                  return player.state.position ==
+                                              Duration.zero ||
+                                          player.state.completed
+                                      ? defaultLeadingIcon
+                                      : const Icon(Icons.play_arrow_rounded);
+                                }
+                              },
+                            )
+                          : defaultLeadingIcon;
+                      final tile = GestureDetector(
+                        onTap: () => _handleTap(player, isSelected, index),
+                        child: ListTile(
+                          title: Text(title, maxLines: 1, overflow: .ellipsis),
+                          leading: leadingIcon,
+                          trailing: reorderUsingDragHandle
+                              ? SizedBox(
+                                  width: removeUsingSlidable ? 28 : 80,
+                                  child: Row(
+                                    children: [
+                                      ReorderableDragStartListener(
+                                        index: index,
+                                        enabled: medias.length > 1,
+                                        child: const Icon(
+                                          Icons.drag_handle_rounded,
+                                        ),
+                                      ),
+                                      if (!removeUsingSlidable)
+                                        SizedBox(width: 15),
+                                      if (!removeUsingSlidable)
+                                        IconButton(
+                                          color: theme.colorScheme.error,
+                                          onPressed: () =>
+                                              _handleRemove(player, index),
+                                          icon: Icon(Icons.delete_rounded),
+                                        ),
+                                    ],
+                                  ),
+                                )
+                              : null,
                         ),
-                        child: child,
-                      )
-                    : Container(key: key, child: child);
-              },
+                      );
+                      final card = Card(
+                        color: isSelected
+                            ? theme.colorScheme.primaryContainer
+                            : null,
+                        margin: const EdgeInsetsGeometry.all(0),
+                        child: tile,
+                      );
+                      final child = reorderUsingDragHandle
+                          ? card
+                          : ReorderableDelayedDragStartListener(
+                              index: index,
+                              enabled: medias.length > 1,
+                              child: card,
+                            );
+                      return removeUsingSlidable
+                          ? Slidable(
+                              key: key,
+                              startActionPane: ActionPane(
+                                motion: const BehindMotion(),
+                                children: [
+                                  SlidableAction(
+                                    onPressed: (_) =>
+                                        _handleRemove(player, index),
+                                    backgroundColor:
+                                        theme.colorScheme.errorContainer,
+                                    foregroundColor:
+                                        theme.colorScheme.onErrorContainer,
+                                    icon: Icons.delete_rounded,
+                                  ),
+                                ],
+                              ),
+                              child: child,
+                            )
+                          : Container(key: key, child: child);
+                    },
+                  ),
+                ),
+              ),
             ),
           );
         },
@@ -241,17 +265,24 @@ class _PlaylistListViewState extends State<PlaylistListView> {
 
   Future<void> _handleTap(Player player, bool isSelected, int index) {
     if (isSelected) {
-      /* NOTICE: [player.play()] nor [player.playOrPause()] work.
-       * I think it's because I'm using a playlist, which may require
-       * a [player.jump()] to start the initial playback.
-       */
-      final index = player.state.playlist.index;
-      final position = player.state.position;
-      return player.state.playing
-          ? player.pause()
-          : player.jump(index).then((_) => player.seek(position));
+      return player.playOrPauseFixed();
     } else {
       return player.jump(index);
     }
   }
+}
+
+class _PlayPauseIntent extends Intent {}
+
+class _PlayPauseAction extends Action<_PlayPauseIntent> {
+  final Player player;
+
+  _PlayPauseAction(this.player);
+
+  @override
+  bool isEnabled(_PlayPauseIntent intent) =>
+      player.state.playlist.medias.isNotEmpty;
+
+  @override
+  void invoke(_PlayPauseIntent intent) async => await player.playOrPauseFixed();
 }
