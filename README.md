@@ -34,7 +34,7 @@ Aside from the web-based build, *Tiny Audio Player* is also available for the fo
 
 - NixOS: This repository is a Nix flake.
 - Debian 13
-- Ubuntu 24.04
+- Ubuntu 25.04 (will probably work on 26.04, but does not work on 24.04).
 
 Check the [releases](https://github.com/emmanuelrosa/tiny_audio_player/releases) page for the downloads.
 
