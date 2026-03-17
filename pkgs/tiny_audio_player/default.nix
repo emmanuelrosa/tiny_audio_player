@@ -1,5 +1,6 @@
 { flutter
 , appVersion
+, stdenvNoCC
 , lib
 , xdg-user-dirs
 , mpv-unwrapped
@@ -13,6 +14,32 @@
   nativeBuildInputs = [ copyDesktopItems imagemagick ];
   pubspecLock = lib.importJSON "${src}/pubspec.lock.json";
   extraWrapProgramArgs = "--set LD_LIBRARY_PATH ${mpv-unwrapped}/lib --set PATH ${lib.makeBinPath [ xdg-user-dirs ]}";
+
+  # There are some Dart packages which have Nix-specific overrides.
+  # See in Nixpkgs, pkgs/development/compiters/dart/package-source-builders/default.nix
+  # This makes it possible to add to or override such packages.
+  customSourceBuilders = {
+
+    # Overrides the xdg_directories package in Nixpkgs
+    # so that the absolute path to xdg-user-dirs is NOT compiled in.
+    # This is so that the Debian build doesn't look for xdg-user-dirs
+    # in the Nix store.
+    xdg_directories = { version, src, ... }:
+    stdenvNoCC.mkDerivation {
+      pname = "xdg_directories";
+      inherit version src;
+      inherit (src) passthru;
+
+      installPhase = ''
+        runHook preInstall
+
+        mkdir $out
+        cp -r ./* $out/
+
+        runHook postInstall
+      '';
+    };
+  };
 
   postInstall = ''
     for n in 16 24 32 48 64 96 128 256; do
