@@ -22,7 +22,7 @@
   vimPackage = vim-full.customize {
     name = "vim";
     vimrcConfig.packages.myVimPackage = with vimPlugins; {
-      start = [ vim-solarized8 fugitive vim-wayland-clipboard dart-vim-plugin vim-lsc vim-flutter ];
+      start = [ iceberg-vim vim-fugitive vim-wayland-clipboard dart-vim-plugin vim-lsc vim-flutter ];
     };
 
     vimrcConfig.customRC = ''
@@ -47,7 +47,7 @@
 
       set background=dark " Solarized theme
       syntax enable
-      colorscheme solarized8
+      colorscheme iceberg
 
       let g:termdebug_wide = 163 " Open a vertical split for GDB debugging
       let g:dart_style_guide = 2
