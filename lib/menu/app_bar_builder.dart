@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:tiny_audio_player/menu/app_routes.dart';
 
 enum AppBarType { normal, minimal }

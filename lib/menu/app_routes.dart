@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:tiny_audio_player/about/about_view.dart';
 import 'package:tiny_audio_player/home/home_view.dart';

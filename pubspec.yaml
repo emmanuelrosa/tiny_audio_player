@@ -46,6 +46,7 @@ dependencies:
   url_launcher: ^6.3.2
   package_info_plus: ^9.0.0
   flutter_svg: ^2.2.3
+  material_ui: ^1.11.1
 
 dev_dependencies:
   flutter_test:
