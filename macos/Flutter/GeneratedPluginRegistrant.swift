@@ -5,7 +5,7 @@
 import FlutterMacOS
 import Foundation
 
-import file_picker
+import file_picker_darwin
 import media_kit_libs_macos_audio
 import package_info_plus
 import url_launcher_macos

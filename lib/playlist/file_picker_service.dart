@@ -57,32 +57,29 @@ class FilePickerService {
       _showLoaderOverlay(context);
     }
 
-    final result = await FilePicker.platform.pickFiles(
+    final files = await FilePicker.pickFiles(
       dialogTitle: 'Add audio files',
-      allowMultiple: true,
       type: .custom,
       allowedExtensions: FilePickerService.allowedExtensions,
     );
 
-    final medias = result == null
-        ? <Media>[]
-        : await Future.wait(
-            List.generate(result.files.length, (index) {
-              final file = result.files[index];
-              final name = result.names[index] ?? file.name;
+    final medias = await Future.wait(
+      List.generate(files.length, (index) async {
+        final file = files[index];
+        final name = file.name;
 
-              return file.bytes == null
-                  ? MediaBuilder.fromPathString(
-                      filePath: file.path!,
-                      volume: player.state.volume,
-                    )
-                  : MediaBuilder.fromBytes(
-                      bytes: file.bytes!,
-                      name: name,
-                      volume: player.state.volume,
-                    );
-            }),
-          );
+        return file.path == null
+            ? MediaBuilder.fromBytes(
+                bytes: await file.readAsBytes(),
+                name: name,
+                volume: player.state.volume,
+              )
+            : MediaBuilder.fromPathString(
+                filePath: file.path!,
+                volume: player.state.volume,
+              );
+      }),
+    );
 
     if (context.mounted) {
       await _hideLoaderOverlay(context);
